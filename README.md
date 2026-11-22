@@ -1,17 +1,17 @@
 # Talos
 
 <p align="center">
-  <img alt="Talos" src="rebranding/TALOS_Brand_Assets/TALOS_Brand_Kit/assets/logos/talos-social-preview-1200x630.png" width="720">
+  <img alt="Talos" src="https://github.com/danailvidev/talos/raw/master/rebranding/TALOS_Brand_Assets/TALOS_Brand_Kit/assets/logos/talos-social-preview-1200x630.png" width="720">
 </p>
 
 Talos is a home for the work of shipping software. Tickets, code reviews, releases, and production issues sit on one screen, and a person still decides what goes out.
 
 <p align="center">
-  <a href="rebranding/talos-sentinel-assembly-refined.mp4">
-    <img alt="The Talos mark. Select it to play the film." src="rebranding/rmark-a22f9a58-d9c2-42aa-9109-d16ab76783d3.png" width="280">
+  <a href="https://github.com/danailvidev/talos/blob/master/rebranding/talos-sentinel-assembly-refined.mp4">
+    <img alt="Play the Talos film" src="https://github.com/danailvidev/talos/raw/master/rebranding/readme/talos-film-poster.png" width="640">
   </a>
   <br>
-  <a href="rebranding/talos-sentinel-assembly-refined.mp4"><strong>Play the film</strong></a>
+  <a href="https://github.com/danailvidev/talos/blob/master/rebranding/talos-sentinel-assembly-refined.mp4"><strong>Play the film</strong></a>
 </p>
 
 ## What you can do here
