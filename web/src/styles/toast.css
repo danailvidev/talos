@@ -1,0 +1,39 @@
+/* ------------------------------------------------------------------ toast */
+
+.toaster [data-sonner-toast].cn-toast {
+  padding: 10px 14px;
+  background: var(--bg-raised);
+  border: 1px solid var(--border-strong);
+  border-radius: var(--radius);
+  color: var(--text);
+  font-size: 0.9375rem;
+  box-shadow: 0 8px 24px color-mix(in srgb, var(--bg-deep) 60%, transparent);
+}
+.toaster [data-sonner-toast][data-type="success"].cn-toast {
+  border-color: var(--success);
+}
+.toaster [data-sonner-toast][data-type="warning"].cn-toast {
+  border-color: var(--warn);
+}
+.toaster [data-sonner-toast][data-type="error"].cn-toast {
+  border-color: var(--failure);
+}
+.toaster [data-sonner-toast].cn-toast [data-close-button] {
+  border-color: var(--border-strong);
+  background: var(--bg-raised);
+  color: var(--text-muted);
+}
+
+.tab-panel {
+  animation: tab-panel-in 0.15s ease;
+}
+@keyframes tab-panel-in {
+  from {
+    opacity: 0;
+    transform: translateY(6px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}

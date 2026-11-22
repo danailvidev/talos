@@ -1,0 +1,11 @@
+/* Skip layout and paint for variable-height timeline events outside the scrollport. */
+.run-timeline > .run-timeline-row,
+.run-timeline > .run-timeline-step {
+  content-visibility: auto;
+  contain-intrinsic-block-size: auto 28px;
+}
+
+/* Raw JSON controls stay discoverable without filling every row with chrome. */
+.run-timeline-row:hover .run-timeline-raw-toggle {
+  opacity: 1;
+}

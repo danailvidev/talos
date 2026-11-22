@@ -1,0 +1,43 @@
+/*
+ * Hooks that Tailwind utilities cannot express cleanly.
+ * Graph layout and component styling live beside their markup.
+ */
+
+/* A phone has no room beside the board, so the ticket drawer takes the screen. */
+@media (max-width: 900px) {
+  .ticket-panel {
+    --drawer-content-width: 100% !important;
+    padding-top: env(safe-area-inset-top);
+    padding-bottom: env(safe-area-inset-bottom);
+  }
+}
+
+/* Use the explicit clear button rendered beside the input. */
+.graph-filter-search input::-webkit-search-cancel-button {
+  display: none;
+}
+
+/*
+ * Keep a dragged card's space in the list while the full-opacity overlay follows
+ * the pointer. The class names are behavior hooks shared with TicketBoard.
+ */
+.board-card-item[data-dragging="true"] {
+  opacity: 1 !important;
+}
+
+.board-card-item[data-dragging="true"] > .board-card {
+  visibility: hidden;
+}
+
+.board-card-item[data-dragging="true"]::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border: 1.5px dashed var(--border-strong);
+  border-radius: var(--radius);
+  background: color-mix(in srgb, var(--status-success) 6%, transparent);
+}
+
+.board-card-handle[data-dragging="true"] {
+  cursor: grabbing;
+}

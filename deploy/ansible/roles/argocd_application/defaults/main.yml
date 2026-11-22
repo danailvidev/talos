@@ -1,0 +1,11 @@
+---
+argocd_namespace: argocd
+argocd_project: talos
+argocd_application_name: "talos-{{ talos_environment }}"
+git_repository_url: ""
+git_target_revision: main
+environment_values_file: deploy/argocd/values/eks.yaml
+helm_release_name: talos
+kubernetes_api_server: https://kubernetes.default.svc
+kubernetes_context: ""
+allow_public_ingress: false

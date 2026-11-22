@@ -1,0 +1,55 @@
+all:
+  hosts:
+    localhost:
+      ansible_connection: local
+  vars:
+    aws_region: us-east-1
+    talos_environment: production
+    talos_namespace: talos
+    kubernetes_context: arn:aws:eks:us-east-1:000000000000:cluster/replace-me
+
+    ecr_repository_names:
+      - talos-control-plane
+      - talos-agent-worker
+      - talos-e2e-worker
+    artifact_bucket_name: replace-me-talos-artifacts
+    artifact_bucket_force_destroy: false
+    artifact_retention_days: 30
+    ingress_enabled: false
+    acm_certificate_arn: arn:aws:acm:us-east-1:000000000000:certificate/replace-me
+    control_plane_irsa_role_arn: arn:aws:iam::000000000000:role/talos-control-plane
+    worker_irsa_role_arn: arn:aws:iam::000000000000:role/talos-worker
+    talos_storage_class_name: talos-gp3-encrypted
+
+    external_secret_enabled: true
+    external_secret_name: talos-secrets
+    external_secret_store_kind: ClusterSecretStore
+    external_secret_store_name: replace-me
+    external_secret_refresh_interval: 1h
+    external_secret_data:
+      - secret_key: TALOS_SECRET_KEY
+        remote_key: /talos/production
+        remote_property: TALOS_SECRET_KEY
+      - secret_key: TALOS_ADMIN_PASSWORD
+        remote_key: /talos/production
+        remote_property: TALOS_ADMIN_PASSWORD
+      # E2E checkout requires the shared GitLab token even when developers have
+      # migrated personal credentials in SQLite. Feedback uses only those
+      # per-developer credentials and never falls back to this token.
+      - secret_key: GITLAB_TOKEN
+        remote_key: /talos/production
+        remote_property: GITLAB_TOKEN
+      # Add only integrations used by this installation. Keep values in the
+      # external provider, never in this inventory or Helm values.
+      # - secret_key: SLACK_CLIENT_SECRET
+      #   remote_key: /talos/production
+      #   remote_property: SLACK_CLIENT_SECRET
+
+    argocd_namespace: argocd
+    argocd_application_name: talos-production
+    argocd_project: talos
+    git_repository_url: https://git.example.com/group/automesh.git
+    git_target_revision: main
+    environment_values_file: deploy/argocd/values/eks.yaml
+    helm_release_name: talos
+    kubernetes_api_server: https://kubernetes.default.svc

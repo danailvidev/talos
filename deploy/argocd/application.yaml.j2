@@ -1,0 +1,40 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: {{ argocd_application_name }}
+  namespace: {{ argocd_namespace }}
+  finalizers:
+    - resources-finalizer.argocd.argoproj.io
+  labels:
+    app.kubernetes.io/part-of: talos
+    talos.environment: {{ talos_environment }}
+spec:
+  project: {{ argocd_project }}
+  sources:
+    - repoURL: {{ git_repository_url }}
+      targetRevision: {{ git_target_revision }}
+      path: deploy/helm/talos
+      helm:
+        releaseName: {{ helm_release_name }}
+        valueFiles:
+          - $values/{{ environment_values_file }}
+    - repoURL: {{ git_repository_url }}
+      targetRevision: {{ git_target_revision }}
+      ref: values
+  destination:
+    server: {{ kubernetes_api_server }}
+    namespace: {{ talos_namespace }}
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+    syncOptions:
+      - CreateNamespace=false
+      - PruneLast=true
+      - RespectIgnoreDifferences=true
+    retry:
+      limit: 5
+      backoff:
+        duration: 10s
+        factor: 2
+        maxDuration: 3m

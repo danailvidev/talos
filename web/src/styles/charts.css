@@ -1,0 +1,34 @@
+/* SVG mark feedback and text fills are retained as chart behavior. */
+.mini-chart-mark {
+  cursor: default;
+  outline: none;
+}
+
+.mini-chart-mark > path,
+.mini-chart-mark > rect {
+  transition: opacity 0.12s ease;
+}
+
+.mini-chart-mark:hover > path,
+.mini-chart-mark:focus-visible > path {
+  opacity: 0.82;
+}
+
+.mini-chart-mark:focus-visible {
+  outline: 1px solid var(--border-strong);
+  outline-offset: 1px;
+}
+
+.mini-chart-label {
+  fill: var(--text-muted);
+  font-family: var(--font-sans);
+  font-size: 0.75rem;
+  font-weight: 600;
+}
+
+.ring-value {
+  fill: var(--text);
+  font-family: var(--font-sans);
+  font-size: 1.5rem;
+  font-weight: 600;
+}

@@ -1,0 +1,8 @@
+---
+- name: Bootstrap Talos GitOps deployment
+  hosts: localhost
+  connection: local
+  gather_facts: false
+  roles:
+    - role: prerequisites
+    - role: argocd_application

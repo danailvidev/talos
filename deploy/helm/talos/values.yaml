@@ -1,0 +1,170 @@
+nameOverride: ""
+fullnameOverride: ""
+
+controlPlane:
+  replicaCount: 1
+  image:
+    repository: ""
+    digest: ""
+    pullPolicy: IfNotPresent
+  port: 4317
+  resources:
+    requests:
+      cpu: 250m
+      memory: 512Mi
+    limits:
+      cpu: "2"
+      memory: 2Gi
+  terminationGracePeriodSeconds: 120
+  podAnnotations: {}
+  podLabels: {}
+  nodeSelector: {}
+  tolerations: []
+  affinity: {}
+
+workers:
+  resources:
+    requests:
+      cpu: 500m
+      memory: 1Gi
+    limits:
+      cpu: "2"
+      memory: 4Gi
+  agent:
+    image:
+      repository: ""
+      digest: ""
+  e2e:
+    image:
+      repository: ""
+      digest: ""
+  jobTtlSecondsAfterFinished: 3600
+
+runtime:
+  publicUrl: ""
+  artifactBackend: s3
+  artifactS3:
+    bucket: ""
+    prefix: talos/e2e
+    region: ""
+
+imagePullSecrets: []
+
+service:
+  type: ClusterIP
+  port: 80
+
+ingress:
+  enabled: false
+  className: alb
+  annotations:
+    alb.ingress.kubernetes.io/scheme: internal
+    alb.ingress.kubernetes.io/target-type: ip
+    alb.ingress.kubernetes.io/listen-ports: '[{"HTTPS":443}]'
+    alb.ingress.kubernetes.io/ssl-redirect: "443"
+  certificateArn: ""
+  host: ""
+  path: /
+  pathType: Prefix
+
+persistence:
+  enabled: true
+  storageClassName: talos-gp3-encrypted
+  accessModes:
+    - ReadWriteOnce
+  size: 20Gi
+  annotations: {}
+
+existingSecret:
+  # Created outside this chart, directly or through External Secrets.
+  name: talos-secrets
+  # The encryption key must be restored with the database. Missing optional
+  # keys simply disable their integration until configured in the UI.
+  requiredKeys:
+    - TALOS_SECRET_KEY
+  optionalKeys:
+    - TALOS_ADMIN_PASSWORD
+    - TALOS_OPERATOR_PASSWORD
+    - GITLAB_TOKEN
+    - GITLAB_API_URL
+    - JIRA_BASE_URL
+    - JIRA_BOARD_ID
+    - JIRA_TEAM_EMAILS
+    - JIRA_EMAIL
+    - JIRA_TOKEN
+    - AZURE_DEVOPS_TOKEN
+    - SLACK_CLIENT_ID
+    - SLACK_CLIENT_SECRET
+    - SLACK_WORKSPACE_ID
+    - SLACK_APP_TOKEN
+    - SLACK_BOT_TOKEN
+    - SLACK_RELEASE_CHANNEL
+    - LOGROCKET_API_KEY
+    - LOGROCKET_WEBHOOK_SECRET
+    - LOGROCKET_JIRA_PROJECT
+    - LOGROCKET_JIRA_ISSUE_TYPE
+    - DATADOG_TOKEN
+    - DATADOG_SITE
+    - DATADOG_LOG_QUERY
+    - DATADOG_JIRA_PROJECT
+    - DATADOG_JIRA_ISSUE_TYPE
+    - ANTHROPIC_API_KEY
+    - OPENAI_API_KEY
+
+serviceAccounts:
+  controlPlane:
+    create: true
+    name: ""
+    annotations: {}
+  worker:
+    create: true
+    name: ""
+    annotations: {}
+
+workflows:
+  logLevel: info
+  timezone: UTC
+  llm:
+    provider: anthropic
+    maxTokens: 2048
+
+resourceQuota:
+  enabled: true
+  hard:
+    requests.cpu: "8"
+    requests.memory: 16Gi
+    limits.cpu: "16"
+    limits.memory: 32Gi
+    count/jobs.batch: "50"
+    count/secrets: "100"
+    persistentvolumeclaims: "2"
+
+limitRange:
+  enabled: true
+  container:
+    defaultRequest:
+      cpu: 100m
+      memory: 256Mi
+    default:
+      cpu: "2"
+      memory: 4Gi
+    max:
+      cpu: "4"
+      memory: 8Gi
+
+networkPolicies:
+  enabled: false
+  # ALB target traffic usually originates in VPC address space.
+  ingressCidrs: []
+  # The control plane needs the Kubernetes API and external provider APIs.
+  kubernetesApiCidrs: []
+  controlPlaneEgressCidrs: []
+  # Workers need Git hosting, package registries, STS/S3, and the QA portal.
+  workerEgressCidrs: []
+  dns:
+    namespaceSelector:
+      matchLabels:
+        kubernetes.io/metadata.name: kube-system
+    podSelector:
+      matchLabels:
+        k8s-app: kube-dns

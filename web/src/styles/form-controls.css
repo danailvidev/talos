@@ -1,0 +1,32 @@
+/*
+ * TALOS Glow focus, applied app-wide rather than per
+ * component: every plain text input, select and textarea gets the same
+ * focus border + subtle glow, so a new form field never falls back to the
+ * browser/shadcn default (white/blue) ring just because nobody remembered to
+ * style it. Checkboxes/radios keep their native focus outline — a Glow ring
+ * reads as a text-field affordance, not a checkbox one.
+ *
+ * Placed last among the unlayered rules above (equal-specificity component
+ * rules like `.search input` set their own
+ * `border`/`border-color` unconditionally, and on a tie the later rule in
+ * the file wins) so this always has the final say on focus.
+ */
+/*
+ * iOS Safari zooms the page when a focused field is under 16px. The rule is
+ * unlayered so it wins over compact `text-sm` utilities on a phone.
+ */
+@media (max-width: 900px) {
+  input:not([type="checkbox"]):not([type="radio"]):not([type="range"]),
+  select,
+  textarea {
+    font-size: 16px;
+  }
+}
+
+input:not([type="checkbox"]):not([type="radio"]):focus,
+select:focus,
+textarea:focus {
+  outline: none;
+  border-color: var(--focus);
+  box-shadow: 0 0 0 3px color-mix(in srgb, var(--focus) 55%, transparent);
+}

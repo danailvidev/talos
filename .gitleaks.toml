@@ -1,0 +1,15 @@
+[extend]
+useDefault = true
+
+[[allowlists]]
+description = "Exact synthetic values used by unit tests"
+regexTarget = "secret"
+regexes = [
+  '''0123456789abcdef0123456789abcdef''',
+  '''glpat-AbCdEf123456''',
+  '''glpat-abc123456''',
+  '''xoxb-0987654321''',
+  '''xoxb-123456789''',
+  '''jira-token-abcdef''',
+  '''root-cause-a'''
+]

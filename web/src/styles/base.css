@@ -1,0 +1,68 @@
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  -webkit-text-size-adjust: 100%;
+  -webkit-tap-highlight-color: transparent;
+  /* Required by the drawer (`components/ui/drawer.tsx`): on iOS Safari, where
+     `position: fixed` fights the collapsing address bar, its backdrop falls back
+     to `position: absolute` and needs the body as its containing block. */
+  position: relative;
+  background: var(--bg);
+  color: var(--text);
+  font: 16px/1.5 var(--font-sans);
+  -webkit-font-smoothing: antialiased;
+}
+
+/* Shared typographic token used in dense metadata and identifiers. */
+.mono {
+  font-family: var(--mono);
+  font-size: var(--type-small-size);
+}
+
+a {
+  color: var(--text);
+  text-decoration-color: var(--action);
+  text-decoration-line: underline;
+  text-underline-offset: 3px;
+}
+a:hover {
+  color: var(--action-hover);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  * {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
+  }
+}
+
+/* -------------------------------------------------------------- scrollbars */
+
+* {
+  scrollbar-width: thin;
+  scrollbar-color: var(--bg-muted) transparent;
+}
+
+*::-webkit-scrollbar {
+  width: 10px;
+  height: 10px;
+}
+*::-webkit-scrollbar-track {
+  background: transparent;
+}
+*::-webkit-scrollbar-thumb {
+  background-color: var(--bg-muted);
+  border: 2px solid transparent;
+  background-clip: content-box;
+  border-radius: 999px;
+}
+*::-webkit-scrollbar-thumb:hover {
+  background-color: var(--border-strong);
+}
+*::-webkit-scrollbar-corner {
+  background: transparent;
+}

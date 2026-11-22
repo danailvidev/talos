@@ -1,0 +1,172 @@
+---
+- name: Validate required environment inputs
+  ansible.builtin.assert:
+    that:
+      - artifact_bucket_name | length > 0
+      - control_plane_irsa_role_arn | length > 0
+      - worker_irsa_role_arn | length > 0
+    fail_msg: Set the EKS, S3, and IRSA variables in the inventory.
+
+- name: Require ACM input when ingress is enabled
+  ansible.builtin.assert:
+    that:
+      - acm_certificate_arn | length > 0
+    fail_msg: Set acm_certificate_arn before enabling ingress.
+  when: ingress_enabled | bool
+
+- name: Create Talos namespace prerequisite
+  kubernetes.core.k8s:
+    context: "{{ kubernetes_context | default(omit, true) }}"
+    state: present
+    definition:
+      apiVersion: v1
+      kind: Namespace
+      metadata:
+        name: "{{ talos_namespace }}"
+        labels:
+          app.kubernetes.io/part-of: talos
+          talos.environment: "{{ talos_environment }}"
+          pod-security.kubernetes.io/enforce: restricted
+          pod-security.kubernetes.io/enforce-version: latest
+          pod-security.kubernetes.io/audit: restricted
+          pod-security.kubernetes.io/audit-version: latest
+          pod-security.kubernetes.io/warn: restricted
+          pod-security.kubernetes.io/warn-version: latest
+
+- name: Ensure immutable-image ECR repositories exist
+  community.aws.ecs_ecr:
+    name: "{{ item }}"
+    region: "{{ aws_region }}"
+    state: present
+    image_tag_mutability: immutable
+    scan_on_push: true
+    encryption_configuration:
+      encryption_type: AES256
+  loop: "{{ ecr_repository_names }}"
+
+- name: Ensure encrypted Talos EBS storage class exists
+  kubernetes.core.k8s:
+    context: "{{ kubernetes_context | default(omit, true) }}"
+    state: present
+    definition:
+      apiVersion: storage.k8s.io/v1
+      kind: StorageClass
+      metadata:
+        name: "{{ talos_storage_class_name }}"
+        labels:
+          app.kubernetes.io/part-of: talos
+      provisioner: ebs.csi.aws.com
+      parameters:
+        type: gp3
+        encrypted: "true"
+      reclaimPolicy: Retain
+      volumeBindingMode: WaitForFirstConsumer
+      allowVolumeExpansion: true
+
+- name: Ensure artifact bucket exists
+  amazon.aws.s3_bucket:
+    name: "{{ artifact_bucket_name }}"
+    region: "{{ aws_region }}"
+    state: present
+    versioning: true
+    encryption: AES256
+    public_access:
+      block_public_acls: true
+      ignore_public_acls: true
+      block_public_policy: true
+      restrict_public_buckets: true
+    policy: >-
+      {{
+        {
+          'Version': '2012-10-17',
+          'Statement': [{
+            'Sid': 'DenyInsecureTransport',
+            'Effect': 'Deny',
+            'Principal': '*',
+            'Action': 's3:*',
+            'Resource': [
+              'arn:aws:s3:::' + artifact_bucket_name,
+              'arn:aws:s3:::' + artifact_bucket_name + '/*'
+            ],
+            'Condition': {
+              'Bool': {'aws:SecureTransport': 'false'}
+            }
+          }]
+        } | to_json
+      }}
+    force: "{{ artifact_bucket_force_destroy }}"
+
+- name: Configure artifact retention
+  community.aws.s3_lifecycle:
+    name: "{{ artifact_bucket_name }}"
+    region: "{{ aws_region }}"
+    rule_id: talos-artifact-retention
+    status: enabled
+    expiration_days: "{{ artifact_retention_days }}"
+    noncurrent_version_expiration_days: "{{ artifact_retention_days }}"
+
+- name: Verify ACM certificate exists
+  community.aws.acm_certificate_info:
+    region: "{{ aws_region }}"
+    certificate_arn: "{{ acm_certificate_arn }}"
+  register: talos_acm_certificate
+  when: ingress_enabled | bool
+
+- name: Verify runtime IRSA roles exist
+  amazon.aws.iam_role_info:
+    name: "{{ item | split('/') | last }}"
+  loop:
+    - "{{ control_plane_irsa_role_arn }}"
+    - "{{ worker_irsa_role_arn }}"
+  register: talos_irsa_roles
+
+- name: Read required EKS add-ons
+  kubernetes.core.k8s_info:
+    context: "{{ kubernetes_context | default(omit, true) }}"
+    api_version: "{{ item.api_version }}"
+    kind: "{{ item.kind }}"
+    name: "{{ item.name }}"
+    namespace: "{{ item.namespace | default(omit) }}"
+  loop:
+    - api_version: storage.k8s.io/v1
+      kind: CSIDriver
+      name: ebs.csi.aws.com
+  register: talos_cluster_capabilities
+
+- name: Require EBS CSI
+  ansible.builtin.assert:
+    that:
+      - item.resources | length == 1
+    fail_msg: "Required cluster capability {{ item.item.name }} was not found."
+  loop: "{{ talos_cluster_capabilities.results }}"
+
+- name: Read AWS Load Balancer Controller
+  kubernetes.core.k8s_info:
+    context: "{{ kubernetes_context | default(omit, true) }}"
+    api_version: apps/v1
+    kind: Deployment
+    name: aws-load-balancer-controller
+    namespace: kube-system
+  register: talos_load_balancer_controller
+  when: ingress_enabled | bool
+
+- name: Require AWS Load Balancer Controller when ingress is enabled
+  ansible.builtin.assert:
+    that:
+      - talos_load_balancer_controller.resources | length == 1
+    fail_msg: Required cluster capability aws-load-balancer-controller was not found.
+  when: ingress_enabled | bool
+
+- name: Validate External Secret inputs
+  ansible.builtin.assert:
+    that:
+      - external_secret_store_name | length > 0
+      - external_secret_data | length > 0
+  when: external_secret_enabled | bool
+
+- name: Create External Secret reference
+  kubernetes.core.k8s:
+    context: "{{ kubernetes_context | default(omit, true) }}"
+    state: present
+    definition: "{{ lookup('template', role_path + '/templates/external-secret.yaml.j2') | from_yaml }}"
+  when: external_secret_enabled | bool

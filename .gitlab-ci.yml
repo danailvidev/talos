@@ -1,0 +1,11 @@
+# Add the jobs for your own GitLab project here. This tree does not include
+# a private CI template.
+stages:
+  - test
+
+test:
+  image: oven/bun:1.3
+  script:
+    - bun install
+    - bun test
+    

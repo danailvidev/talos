@@ -1,0 +1,38 @@
+/* TALOS application theme — generated from the approved brand artwork */
+:root {
+  --talos-bg: #080E15;
+  --talos-surface-1: #0D1823;
+  --talos-surface-2: #142331;
+  --talos-border: #343B42;
+  --talos-text: #ECE9E4;
+  --talos-text-muted: #84919E;
+  --talos-primary: #B08C65;
+  --talos-primary-hover: #CFA473;
+  --talos-focus: #F3B45D;
+  --talos-success: #52B788;
+  --talos-danger: #E06C75;
+  --talos-radius-sm: 6px;
+  --talos-radius-md: 10px;
+  --talos-radius-lg: 16px;
+  --talos-shadow: 0 12px 32px rgb(0 0 0 / 32%);
+  --talos-font-ui: "Space Grotesk", Inter, system-ui, sans-serif;
+  --talos-font-display: "Oxanium", "Space Grotesk", sans-serif;
+  --talos-font-mono: "JetBrains Mono", ui-monospace, monospace;
+}
+
+html, body { background: var(--talos-bg); color: var(--talos-text); font-family: var(--talos-font-ui); }
+h1, h2, h3 { font-family: var(--talos-font-display); letter-spacing: .025em; }
+a { color: var(--talos-primary-hover); }
+a:hover { color: var(--talos-focus); }
+button, .button {
+  background: var(--talos-primary); color: var(--talos-bg); border: 1px solid var(--talos-primary);
+  border-radius: var(--talos-radius-md); font-weight: 700;
+}
+button:hover, .button:hover { background: var(--talos-primary-hover); }
+button:focus-visible, a:focus-visible, input:focus-visible {
+  outline: 3px solid color-mix(in srgb, var(--talos-focus) 70%, transparent); outline-offset: 2px;
+}
+.card, .panel { background: var(--talos-surface-1); border: 1px solid var(--talos-border); border-radius: var(--talos-radius-lg); box-shadow: var(--talos-shadow); }
+.muted { color: var(--talos-text-muted); }
+.status-success { color: var(--talos-success); }
+.status-danger { color: var(--talos-danger); }

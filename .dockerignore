@@ -1,0 +1,17 @@
+.git
+.gitignore
+.env
+.env.*
+config/.env*
+config/workflows.yaml
+data
+coverage
+dist
+logs
+node_modules
+out
+web/dist
+web/node_modules
+*.log
+*.tgz
+*.tsbuildinfo

@@ -1,0 +1,85 @@
+---
+- name: Validate Argo CD registration inputs
+  ansible.builtin.assert:
+    that:
+      - git_repository_url | length > 0
+      - git_target_revision | length > 0
+      - environment_values_file | length > 0
+    fail_msg: Set the Git repository, revision, and committed values file.
+
+- name: Load committed environment values
+  ansible.builtin.set_fact:
+    talos_committed_values: >-
+      {{
+        lookup(
+          'file',
+          playbook_dir + '/../../' + environment_values_file
+        ) | from_yaml
+      }}
+
+- name: Require committed immutable image references
+  ansible.builtin.assert:
+    that:
+      - talos_committed_values.controlPlane.image.repository | length > 0
+      - talos_committed_values.controlPlane.image.digest is match('^sha256:[a-f0-9]{64}$')
+      - talos_committed_values.workers.agent.image.repository | length > 0
+      - talos_committed_values.workers.agent.image.digest is match('^sha256:[a-f0-9]{64}$')
+      - talos_committed_values.workers.e2e.image.repository | length > 0
+      - talos_committed_values.workers.e2e.image.digest is match('^sha256:[a-f0-9]{64}$')
+    fail_msg: Replace image placeholders in the committed environment values before registration.
+
+- name: Require committed AWS runtime values to match validated prerequisites
+  ansible.builtin.assert:
+    that:
+      - talos_committed_values.runtime.artifactS3.bucket == artifact_bucket_name
+      - talos_committed_values.serviceAccounts.controlPlane.annotations['eks.amazonaws.com/role-arn'] == control_plane_irsa_role_arn
+      - talos_committed_values.serviceAccounts.worker.annotations['eks.amazonaws.com/role-arn'] == worker_irsa_role_arn
+      - (talos_committed_values.persistence | default({})).get('storageClassName', talos_storage_class_name) == talos_storage_class_name
+    fail_msg: Committed bucket, IRSA, or storage-class values do not match the validated inventory.
+
+- name: Refuse unapproved public ingress
+  ansible.builtin.assert:
+    that:
+      - >-
+        not (talos_committed_values.ingress.enabled | default(false)) or
+        allow_public_ingress or
+        talos_committed_values.ingress.annotations['alb.ingress.kubernetes.io/scheme'] == 'internal'
+    fail_msg: Set allow_public_ingress only after an explicit public-exposure security review.
+
+- name: Verify Argo CD is installed
+  kubernetes.core.k8s_info:
+    context: "{{ kubernetes_context | default(omit, true) }}"
+    api_version: apiextensions.k8s.io/v1
+    kind: CustomResourceDefinition
+    name: applications.argoproj.io
+  register: argocd_application_crd
+
+- name: Require the Argo CD Application CRD
+  ansible.builtin.assert:
+    that:
+      - argocd_application_crd.resources | length == 1
+    fail_msg: Install Argo CD before registering the Talos Application.
+
+- name: Register restricted Talos Argo CD project
+  kubernetes.core.k8s:
+    context: "{{ kubernetes_context | default(omit, true) }}"
+    state: present
+    definition: >-
+      {{
+        lookup(
+          'template',
+          playbook_dir + '/../argocd/project.yaml.j2'
+        ) | from_yaml
+      }}
+
+- name: Register Talos Application with Argo CD
+  kubernetes.core.k8s:
+    context: "{{ kubernetes_context | default(omit, true) }}"
+    state: present
+    definition: >-
+      {{
+        lookup(
+          'template',
+          playbook_dir + '/../argocd/application.yaml.j2'
+        ) | from_yaml
+      }}

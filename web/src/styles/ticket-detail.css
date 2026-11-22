@@ -1,0 +1,6 @@
+/* A clipped Markdown body fades into its edge instead of ending mid-sentence. */
+.ticket-prose-clipped {
+  max-height: 190px;
+  overflow: hidden;
+  mask-image: linear-gradient(to bottom, #000 65%, transparent);
+}

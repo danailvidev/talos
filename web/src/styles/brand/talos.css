@@ -1,0 +1,188 @@
+@import "@fontsource/oxanium/latin-600.css";
+@import "@fontsource/oxanium/latin-700.css";
+@import "@fontsource/space-grotesk/latin-400.css";
+@import "@fontsource/space-grotesk/latin-500.css";
+@import "@fontsource/space-grotesk/latin-600.css";
+@import "@fontsource/jetbrains-mono/latin-400.css";
+@import "@fontsource/jetbrains-mono/latin-500.css";
+@import "@fontsource/jetbrains-mono/latin-600.css";
+
+/*
+ * TALOS is the replaceable brand boundary.
+ *
+ * Application code consumes the semantic aliases below (`--bg`, `--action`,
+ * `--status-success`, and so on), while the approved source values remain
+ * available as `--talos-*` tokens. A future identity can replace this file
+ * without changing component code or the Tailwind/shadcn bridge in index.css.
+ */
+:root {
+  --talos-bg: #080e15;
+  --talos-surface-1: #0d1823;
+  --talos-surface-2: #142331;
+  --talos-border: #343b42;
+  --talos-text: #ece9e4;
+  --talos-text-muted: #84919e;
+  --talos-primary: #b08c65;
+  --talos-primary-hover: #cfa473;
+  --talos-focus: #f3b45d;
+  --talos-success: #52b788;
+  --talos-danger: #e06c75;
+
+  /*
+   * Light appearance derivatives. These preserve the warm TALOS character while
+   * giving text, actions and statuses enough contrast on pale surfaces.
+   */
+  --talos-light-bg: #f7f5f1;
+  --talos-light-surface-1: #ffffff;
+  --talos-light-surface-2: #ebe7df;
+  --talos-light-surface-muted: #ded8ce;
+  --talos-light-border: #cbc3b7;
+  --talos-light-border-strong: #9f9587;
+  --talos-light-text: #171b20;
+  --talos-light-text-dim: #343a40;
+  --talos-light-text-muted: #59616a;
+  --talos-light-text-faint: #626a73;
+  --talos-light-primary: #7b5b3c;
+  --talos-light-primary-hover: #684a2f;
+  --talos-light-focus: #8a5b16;
+  --talos-light-success: #217452;
+  --talos-light-danger: #b33c49;
+
+  --bg: var(--talos-bg);
+  --bg-deep: var(--talos-bg);
+  --bg-raised: var(--talos-surface-1);
+  --bg-hover: var(--talos-surface-2);
+  --bg-muted: color-mix(in srgb, var(--talos-surface-2) 72%, var(--talos-border));
+  --border: var(--talos-border);
+  --border-strong: color-mix(in srgb, var(--talos-border) 58%, var(--talos-text-muted));
+
+  --text: var(--talos-text);
+  --text-dim: color-mix(in srgb, var(--talos-text) 78%, var(--talos-text-muted));
+  --text-muted: var(--talos-text-muted);
+  --text-faint: color-mix(in srgb, var(--talos-text-muted) 78%, var(--talos-bg));
+
+  --action: var(--talos-primary);
+  --action-hover: var(--talos-primary-hover);
+  --action-strong: color-mix(in srgb, var(--talos-primary) 72%, var(--talos-bg));
+  --action-wash: color-mix(in srgb, var(--talos-primary) 14%, var(--talos-surface-1));
+
+  --focus: var(--talos-focus);
+  --live: var(--talos-focus);
+  --live-wash: color-mix(in srgb, var(--talos-focus) 14%, var(--talos-surface-1));
+
+  --status-success: var(--talos-success);
+  --status-success-strong: color-mix(in srgb, var(--talos-success) 74%, var(--talos-bg));
+  --status-success-wash: color-mix(in srgb, var(--talos-success) 15%, var(--talos-surface-1));
+  --status-warning: var(--talos-focus);
+  --status-warning-strong: color-mix(in srgb, var(--talos-focus) 72%, var(--talos-bg));
+  --status-warning-wash: color-mix(in srgb, var(--talos-focus) 15%, var(--talos-surface-1));
+  --status-danger: var(--talos-danger);
+  --status-danger-strong: color-mix(in srgb, var(--talos-danger) 75%, var(--talos-bg));
+  --status-danger-wash: color-mix(in srgb, var(--talos-danger) 15%, var(--talos-surface-1));
+
+  --brand: var(--action);
+  --brand-surface: var(--talos-bg);
+  --brand-artwork: var(--talos-primary);
+  --success: var(--status-success);
+  --failure: var(--status-danger);
+  --warn: var(--status-warning);
+  --running: var(--live);
+
+  --radius-compact: 6px;
+  --radius-control: 10px;
+  --radius-panel: 16px;
+  --radius: var(--radius-control);
+  --shadow-panel: 0 12px 32px rgb(0 0 0 / 32%);
+  --shadow-auth:
+    0 28px 90px rgb(0 0 0 / 48%),
+    0 0 0 1px color-mix(in srgb, var(--action) 7%, transparent);
+  --inset-highlight: inset 0 1px 0 rgb(255 255 255 / 4%);
+
+  --font-display: "Oxanium", "Space Grotesk", ui-sans-serif, sans-serif;
+  --font-sans: "Space Grotesk", Inter, system-ui, sans-serif;
+  --mono: "JetBrains Mono", ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+
+  --type-display-size: 2.5rem;
+  --type-display-leading: 3rem;
+  --type-h1-size: 2rem;
+  --type-h1-leading: 2.5rem;
+  --type-h2-size: 1.5rem;
+  --type-h2-leading: 2rem;
+  --type-h3-size: 1.125rem;
+  --type-h3-leading: 1.625rem;
+  --type-body-size: 1rem;
+  --type-body-leading: 1.5rem;
+  --type-small-size: 0.875rem;
+  --type-small-leading: 1.25rem;
+  --type-label-size: 0.75rem;
+  --type-label-leading: 1rem;
+
+  color-scheme: dark;
+
+  --background: var(--bg);
+  --foreground: var(--text);
+  --card: var(--bg-raised);
+  --card-foreground: var(--text);
+  --popover: var(--bg-raised);
+  --popover-foreground: var(--text);
+  --primary: var(--action);
+  --primary-foreground: var(--bg);
+  --secondary: var(--bg-hover);
+  --secondary-foreground: var(--text);
+  --muted: var(--bg-hover);
+  --muted-foreground: var(--text-muted);
+  --accent: var(--bg-hover);
+  --accent-foreground: var(--text);
+  --destructive: var(--status-danger);
+  --destructive-foreground: var(--text);
+  --input: var(--border);
+  --ring: var(--focus);
+}
+
+/*
+ * Appearance changes stop at the semantic boundary. Components consume the
+ * aliases below, so new UI built with those aliases or the shadcn mappings above
+ * supports both appearances without knowing which one is active.
+ */
+[data-appearance="light"] {
+  --bg: var(--talos-light-bg);
+  --bg-deep: #ece8e1;
+  --bg-raised: var(--talos-light-surface-1);
+  --bg-hover: var(--talos-light-surface-2);
+  --bg-muted: var(--talos-light-surface-muted);
+  --border: var(--talos-light-border);
+  --border-strong: var(--talos-light-border-strong);
+
+  --text: var(--talos-light-text);
+  --text-dim: var(--talos-light-text-dim);
+  --text-muted: var(--talos-light-text-muted);
+  --text-faint: var(--talos-light-text-faint);
+
+  --action: var(--talos-light-primary);
+  --action-hover: var(--talos-light-primary-hover);
+  --action-strong: color-mix(in srgb, var(--talos-light-primary) 82%, black);
+  --action-wash: color-mix(in srgb, var(--talos-light-primary) 12%, var(--bg-raised));
+
+  --focus: var(--talos-light-focus);
+  --live: var(--talos-light-focus);
+  --live-wash: color-mix(in srgb, var(--talos-light-focus) 12%, var(--bg-raised));
+
+  --status-success: var(--talos-light-success);
+  --status-success-strong: color-mix(in srgb, var(--talos-light-success) 84%, black);
+  --status-success-wash: color-mix(in srgb, var(--talos-light-success) 12%, var(--bg-raised));
+  --status-warning: var(--talos-light-focus);
+  --status-warning-strong: color-mix(in srgb, var(--talos-light-focus) 84%, black);
+  --status-warning-wash: color-mix(in srgb, var(--talos-light-focus) 12%, var(--bg-raised));
+  --status-danger: var(--talos-light-danger);
+  --status-danger-strong: color-mix(in srgb, var(--talos-light-danger) 84%, black);
+  --status-danger-wash: color-mix(in srgb, var(--talos-light-danger) 12%, var(--bg-raised));
+
+  --shadow-panel: 0 12px 32px rgb(23 27 32 / 14%);
+  --shadow-auth:
+    0 28px 72px rgb(23 27 32 / 16%),
+    0 0 0 1px color-mix(in srgb, var(--action) 9%, transparent);
+  --inset-highlight: inset 0 1px 0 rgb(23 27 32 / 5%);
+  --destructive-foreground: #ffffff;
+
+  color-scheme: light;
+}

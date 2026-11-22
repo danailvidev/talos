@@ -1,0 +1,28 @@
+# Read-only permissions used by release verification. Apply the ClusterRole once.
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRole
+metadata:
+  name: automesh-release-verifier
+rules:
+  - apiGroups: ["apps"]
+    resources: ["deployments", "replicasets"]
+    verbs: ["get", "list"]
+  - apiGroups: [""]
+    resources: ["pods"]
+    verbs: ["get", "list"]
+---
+# Apply one RoleBinding in every release namespace. This example grants the
+# ServiceAccount "automesh" in namespace "automesh" access to namespace "prod".
+apiVersion: rbac.authorization.k8s.io/v1
+kind: RoleBinding
+metadata:
+  name: automesh-release-verifier
+  namespace: prod
+subjects:
+  - kind: ServiceAccount
+    name: automesh
+    namespace: automesh
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: ClusterRole
+  name: automesh-release-verifier

@@ -1,0 +1,89 @@
+@import "tailwindcss";
+@import "tw-animate-css";
+@import "./styles/brand/talos.css";
+
+/*
+ * Feature styles remain ordered by cascade behavior. The TALOS brand layer is
+ * the only file that owns palette, typography, radius, and elevation values.
+ */
+@import "./styles/base.css";
+@import "./styles/status-pills.css";
+@import "./styles/run-timeline.css";
+@import "./styles/charts.css";
+@import "./styles/loops.css";
+@import "./styles/pull-requests.css";
+@import "./styles/pull-request-detail.css";
+@import "./styles/toast.css";
+@import "./styles/graph.css";
+@import "./styles/ticket-detail.css";
+@import "./styles/markdown.css";
+@import "./styles/form-controls.css";
+
+/* shadcn's dark: utilities follow the same resolved root state as our tokens. */
+@custom-variant dark (&:where([data-appearance="dark"], [data-appearance="dark"] *));
+
+@theme inline {
+  --font-sans: var(--font-sans);
+  --font-display: var(--font-display);
+  --font-mono: var(--mono);
+
+  --color-action: var(--action);
+  --color-action-hover: var(--action-hover);
+  --color-live: var(--live);
+  --color-success: var(--status-success);
+  --color-warning: var(--status-warning);
+  --color-danger: var(--status-danger);
+
+  --color-ring: var(--ring);
+  --color-input: var(--input);
+  --color-border: var(--border);
+  --color-destructive: var(--destructive);
+  --color-destructive-foreground: var(--destructive-foreground);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-accent: var(--accent);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-muted: var(--muted);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-secondary: var(--secondary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-primary: var(--primary);
+  --color-popover-foreground: var(--popover-foreground);
+  --color-popover: var(--popover);
+  --color-card-foreground: var(--card-foreground);
+  --color-card: var(--card);
+  --color-foreground: var(--foreground);
+  --color-background: var(--background);
+
+  --radius-sm: var(--radius-compact);
+  --radius-md: var(--radius-control);
+  --radius-lg: var(--radius-panel);
+  --radius-xl: var(--radius-panel);
+}
+
+@layer base {
+  * {
+    @apply border-border outline-ring/50;
+  }
+
+  html {
+    @apply bg-background font-sans text-foreground;
+  }
+
+  body {
+    @apply bg-background text-foreground;
+  }
+
+  h1,
+  h2,
+  h3 {
+    font-family: var(--font-display);
+    letter-spacing: 0.025em;
+  }
+
+  code,
+  pre,
+  kbd,
+  samp {
+    font-family: var(--mono);
+  }
+}

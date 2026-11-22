@@ -1,0 +1,26 @@
+/* Parent border tone follows the status carried by its interactive child. */
+.pr-action-pill-wrap:has(.pr-action-pill.waiting) {
+  border-color: color-mix(in srgb, var(--warn) 45%, var(--border));
+}
+
+.pr-action-pill-wrap:has(.pr-action-pill.running) {
+  border-color: color-mix(in srgb, var(--running) 45%, var(--border));
+}
+
+.pr-action-pill-wrap:has(.pr-action-pill.success) {
+  border-color: color-mix(in srgb, var(--success) 45%, var(--border));
+}
+
+.pr-action-pill-wrap:has(.pr-action-pill.failure) {
+  border-color: color-mix(in srgb, var(--failure) 45%, var(--border));
+}
+
+.pr-action-pill-wrap .run-log {
+  border: 0;
+  border-radius: 0;
+  background: transparent;
+}
+
+.pr-action-pill-wrap .run-timeline-elapsed {
+  flex-basis: 2.9rem;
+}

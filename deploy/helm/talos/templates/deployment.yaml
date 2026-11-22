@@ -1,0 +1,164 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ include "talos.fullname" . }}
+  labels:
+    {{- include "talos.labels" . | nindent 4 }}
+spec:
+  replicas: {{ .Values.controlPlane.replicaCount }}
+  strategy:
+    type: Recreate
+  selector:
+    matchLabels:
+      {{- include "talos.selectorLabels" . | nindent 6 }}
+  template:
+    metadata:
+      annotations:
+        checksum/workflows: {{ include (print $.Template.BasePath "/configmap.yaml") . | sha256sum }}
+        {{- with .Values.controlPlane.podAnnotations }}
+        {{- toYaml . | nindent 8 }}
+        {{- end }}
+      labels:
+        {{- include "talos.selectorLabels" . | nindent 8 }}
+        {{- with .Values.controlPlane.podLabels }}
+        {{- toYaml . | nindent 8 }}
+        {{- end }}
+    spec:
+      serviceAccountName: {{ include "talos.controlPlaneServiceAccountName" . }}
+      automountServiceAccountToken: true
+      terminationGracePeriodSeconds: {{ .Values.controlPlane.terminationGracePeriodSeconds }}
+      securityContext:
+        runAsNonRoot: true
+        runAsUser: 10001
+        runAsGroup: 10001
+        fsGroup: 10001
+        fsGroupChangePolicy: OnRootMismatch
+        seccompProfile:
+          type: RuntimeDefault
+      {{- with .Values.imagePullSecrets }}
+      imagePullSecrets:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      containers:
+        - name: control-plane
+          image: {{ include "talos.digestImage" (dict "name" "controlPlane" "image" .Values.controlPlane.image) | quote }}
+          imagePullPolicy: {{ .Values.controlPlane.image.pullPolicy }}
+          securityContext:
+            allowPrivilegeEscalation: false
+            readOnlyRootFilesystem: true
+            capabilities:
+              drop: ["ALL"]
+          env:
+            - name: HOST
+              value: 0.0.0.0
+            - name: PORT
+              value: {{ .Values.controlPlane.port | quote }}
+            - name: TALOS_CONFIG
+              value: /etc/talos/workflows.yaml
+            - name: TALOS_EXECUTOR
+              value: kubernetes
+            - name: TALOS_PUBLIC_URL
+              value: {{ include "talos.publicUrl" . | quote }}
+            - name: TALOS_ARTIFACT_BACKEND
+              value: {{ .Values.runtime.artifactBackend | quote }}
+            - name: TALOS_ARTIFACT_S3_BUCKET
+              value: {{ required "runtime.artifactS3.bucket is required" .Values.runtime.artifactS3.bucket | quote }}
+            - name: TALOS_ARTIFACT_S3_PREFIX
+              value: {{ .Values.runtime.artifactS3.prefix | quote }}
+            {{- with .Values.runtime.artifactS3.region }}
+            - name: AWS_REGION
+              value: {{ . | quote }}
+            {{- end }}
+            - name: TALOS_KUBERNETES_NAMESPACE
+              valueFrom:
+                fieldRef:
+                  fieldPath: metadata.namespace
+            - name: TALOS_WORKER_SERVICE_ACCOUNT
+              value: {{ include "talos.workerServiceAccountName" . | quote }}
+            - name: TALOS_AGENT_IMAGE
+              value: {{ include "talos.digestImage" (dict "name" "workers.agent" "image" .Values.workers.agent.image) | quote }}
+            - name: TALOS_E2E_IMAGE
+              value: {{ include "talos.digestImage" (dict "name" "workers.e2e" "image" .Values.workers.e2e.image) | quote }}
+            - name: TALOS_JOB_TTL_SECONDS
+              value: {{ .Values.workers.jobTtlSecondsAfterFinished | quote }}
+            - name: TALOS_WORKER_CPU_REQUEST
+              value: {{ .Values.workers.resources.requests.cpu | quote }}
+            - name: TALOS_WORKER_MEMORY_REQUEST
+              value: {{ .Values.workers.resources.requests.memory | quote }}
+            - name: TALOS_WORKER_CPU_LIMIT
+              value: {{ .Values.workers.resources.limits.cpu | quote }}
+            - name: TALOS_WORKER_MEMORY_LIMIT
+              value: {{ .Values.workers.resources.limits.memory | quote }}
+            {{- range .Values.existingSecret.requiredKeys }}
+            - name: {{ . }}
+              valueFrom:
+                secretKeyRef:
+                  name: {{ required "existingSecret.name is required" $.Values.existingSecret.name }}
+                  key: {{ . }}
+            {{- end }}
+            {{- range .Values.existingSecret.optionalKeys }}
+            - name: {{ . }}
+              valueFrom:
+                secretKeyRef:
+                  name: {{ required "existingSecret.name is required" $.Values.existingSecret.name }}
+                  key: {{ . }}
+                  optional: true
+            {{- end }}
+          ports:
+            - name: http
+              containerPort: {{ .Values.controlPlane.port }}
+              protocol: TCP
+          startupProbe:
+            httpGet:
+              path: /healthz
+              port: http
+            failureThreshold: 30
+            periodSeconds: 5
+          livenessProbe:
+            httpGet:
+              path: /healthz
+              port: http
+            failureThreshold: 3
+            periodSeconds: 10
+          readinessProbe:
+            httpGet:
+              path: /readyz
+              port: http
+            failureThreshold: 3
+            periodSeconds: 5
+          resources:
+            {{- toYaml .Values.controlPlane.resources | nindent 12 }}
+          volumeMounts:
+            - name: data
+              mountPath: /var/lib/talos
+            - name: tmp
+              mountPath: /tmp
+            - name: workflows
+              mountPath: /etc/talos/workflows.yaml
+              subPath: workflows.yaml
+              readOnly: true
+      volumes:
+        - name: workflows
+          configMap:
+            name: {{ include "talos.fullname" . }}-workflows
+        - name: data
+          {{- if .Values.persistence.enabled }}
+          persistentVolumeClaim:
+            claimName: {{ include "talos.fullname" . }}-data
+          {{- else }}
+          emptyDir: {}
+          {{- end }}
+        - name: tmp
+          emptyDir: {}
+      {{- with .Values.controlPlane.nodeSelector }}
+      nodeSelector:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.controlPlane.affinity }}
+      affinity:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.controlPlane.tolerations }}
+      tolerations:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}

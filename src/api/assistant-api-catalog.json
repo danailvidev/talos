@@ -1,0 +1,1193 @@
+{
+  "operations": [
+    {
+      "name": "adminUsers",
+      "usage": "adminUsers: () => get<AdminUsersView>(\"/api/admin/users\"),",
+      "types": []
+    },
+    {
+      "name": "adminRoles",
+      "usage": "adminRoles: () => get<AdminRolesView>(\"/api/admin/roles\"),",
+      "types": []
+    },
+    {
+      "name": "createAdminRole",
+      "usage": "createAdminRole: (body: AdminRoleInput) =>\n    send<AdminRoleView>(\"/api/admin/roles\", \"POST\", body),",
+      "types": [
+        "AdminRoleInput"
+      ]
+    },
+    {
+      "name": "updateAdminRole",
+      "usage": "updateAdminRole: (id: string, body: AdminRoleInput) =>\n    send<AdminRoleView>(`/api/admin/roles/${encodeURIComponent(id)}`, \"PATCH\", body),",
+      "types": [
+        "AdminRoleInput"
+      ]
+    },
+    {
+      "name": "deleteAdminRole",
+      "usage": "deleteAdminRole: (id: string) =>\n    send<{ deleted: true }>(`/api/admin/roles/${encodeURIComponent(id)}`, \"DELETE\"),",
+      "types": []
+    },
+    {
+      "name": "adminUser",
+      "usage": "adminUser: (id: string) =>\n    get<AdminUserDetailView>(`/api/admin/users/${encodeURIComponent(id)}`),",
+      "types": []
+    },
+    {
+      "name": "createAdminUser",
+      "usage": "createAdminUser: (body: AdminUserCreate) =>\n    send<AdminUserInvitationView>(\"/api/admin/users\", \"POST\", body),",
+      "types": [
+        "AdminUserCreate"
+      ]
+    },
+    {
+      "name": "createAdminUserInvitation",
+      "usage": "createAdminUserInvitation: (id: string) =>\n    send<AdminUserInvitationView>(\n      `/api/admin/users/${encodeURIComponent(id)}/invitation`,\n      \"POST\",\n    ),",
+      "types": []
+    },
+    {
+      "name": "updateAdminUser",
+      "usage": "updateAdminUser: (id: string, body: AdminUserPatch) =>\n    send<AdminUserView>(`/api/admin/users/${encodeURIComponent(id)}`, \"PATCH\", body),",
+      "types": [
+        "AdminUserPatch"
+      ]
+    },
+    {
+      "name": "deleteAdminUser",
+      "usage": "deleteAdminUser: (id: string) =>\n    send<AccountDeletedView>(`/api/admin/users/${encodeURIComponent(id)}`, \"DELETE\"),",
+      "types": []
+    },
+    {
+      "name": "adminLogs",
+      "usage": "adminLogs: (limit = 200) => get<AdminLogsView>(`/api/admin/logs?limit=${limit}`),",
+      "types": []
+    },
+    {
+      "name": "adminOrchestration",
+      "usage": "adminOrchestration: () => get<OrchestrationView>(\"/api/admin/orchestration\"),",
+      "types": []
+    },
+    {
+      "name": "drainOrchestration",
+      "usage": "drainOrchestration: () =>\n    send<{ capacity: OrchestrationView[\"capacity\"] }>(\"/api/admin/orchestration/drain\", \"POST\"),",
+      "types": []
+    },
+    {
+      "name": "resumeOrchestration",
+      "usage": "resumeOrchestration: () =>\n    send<{ capacity: OrchestrationView[\"capacity\"] }>(\"/api/admin/orchestration/resume\", \"POST\"),",
+      "types": []
+    },
+    {
+      "name": "holdJob",
+      "usage": "holdJob: (id: string, reason = \"held by operator\") =>\n    send(`/api/jobs/${encodeURIComponent(id)}/hold`, \"POST\", { reason }),",
+      "types": []
+    },
+    {
+      "name": "resumeJob",
+      "usage": "resumeJob: (id: string) =>\n    send(`/api/jobs/${encodeURIComponent(id)}/resume`, \"POST\"),",
+      "types": []
+    },
+    {
+      "name": "setJobPriority",
+      "usage": "setJobPriority: (id: string, priority: number) =>\n    send(`/api/jobs/${encodeURIComponent(id)}/priority`, \"POST\", { priority }),",
+      "types": []
+    },
+    {
+      "name": "adminFeedback",
+      "usage": "adminFeedback: () => get<AdminFeedbackView>(\"/api/admin/feedback\"),",
+      "types": []
+    },
+    {
+      "name": "deleteAdminFeedback",
+      "usage": "deleteAdminFeedback: (id: string) =>\n    send<{ deleted: true }>(`/api/admin/feedback/${encodeURIComponent(id)}`, \"DELETE\"),",
+      "types": []
+    },
+    {
+      "name": "system",
+      "usage": "system: () => get<SystemView>(\"/api/system\"),",
+      "types": []
+    },
+    {
+      "name": "tasks",
+      "usage": "tasks: (\n    query: string,\n    page?: { limit: number; offset: number },\n    options: ReadOptions = {},\n  ) => {\n    const params = new URLSearchParams({\n        ...(query ? { q: query } : {}),\n        ...(page ? { limit: String(page.limit), offset: String(page.offset) } : {}),\n    });\n    const suffix = params.size > 0 ? `?${params}` : \"\";\n    return get<{ tasks: TaskSummary[]; total: number }>(`/api/tasks${suffix}`, options);\n  },",
+      "types": [
+        "ReadOptions"
+      ]
+    },
+    {
+      "name": "task",
+      "usage": "task: (id: string) =>\n    get<TaskDetail>(`/api/tasks/${encodeURIComponent(id)}`),",
+      "types": []
+    },
+    {
+      "name": "taskIssues",
+      "usage": "taskIssues: (id: string, { limit, offset }: { limit: number; offset: number }) =>\n    get<TaskIssuePage>(\n      `/api/tasks/${encodeURIComponent(id)}/issues?limit=${limit}&offset=${offset}`,\n    ),",
+      "types": []
+    },
+    {
+      "name": "taskRuns",
+      "usage": "taskRuns: (id: string, { limit, offset }: { limit: number; offset: number }) =>\n    get<TaskRunPage>(\n      `/api/tasks/${encodeURIComponent(id)}/runs?limit=${limit}&offset=${offset}`,\n    ),",
+      "types": []
+    },
+    {
+      "name": "createInstance",
+      "usage": "createInstance: (body: CreateTaskInstance) =>\n    send<TaskDetail>(\"/api/tasks\", \"POST\", body),",
+      "types": [
+        "CreateTaskInstance",
+        "Visibility",
+        "SchedulePatch",
+        "Trigger"
+      ]
+    },
+    {
+      "name": "updateInstance",
+      "usage": "updateInstance: (id: string, body: UpdateTaskInstance) =>\n    send<TaskDetail>(`/api/tasks/${encodeURIComponent(id)}`, \"PUT\", body),\n  /** Owner-only, and refused while a run is in flight — see `routeTaskDelete`. */",
+      "types": [
+        "UpdateTaskInstance"
+      ]
+    },
+    {
+      "name": "deleteInstance",
+      "usage": "deleteInstance: (id: string) =>\n    send<TaskDeletedView>(`/api/tasks/${encodeURIComponent(id)}`, \"DELETE\"),",
+      "types": []
+    },
+    {
+      "name": "gitlabMergeRequests",
+      "usage": "gitlabMergeRequests: (project: string, search: string) =>\n    get<{ mergeRequests: MergeRequestView[] }>(\n      `/api/gitlab/merge-requests?project=${encodeURIComponent(project)}` +\n        (search ? `&search=${encodeURIComponent(search)}` : \"\"),\n    ),",
+      "types": []
+    },
+    {
+      "name": "gitlabGroupProjects",
+      "usage": "gitlabGroupProjects: (group: string) =>\n    get<{ projects: GitLabProjectView[] }>(\n      `/api/gitlab/projects?group=${encodeURIComponent(group)}`,\n    ),",
+      "types": []
+    },
+    {
+      "name": "gitlabBranches",
+      "usage": "gitlabBranches: (project: string, search: string) =>\n    get<{ branches: BranchView[] }>(\n      `/api/gitlab/branches?project=${encodeURIComponent(project)}` +\n        (search ? `&search=${encodeURIComponent(search)}` : \"\"),\n    ),\n  /** The coding agents this host is signed in to — the custom loop's Agent dropdown. */",
+      "types": []
+    },
+    {
+      "name": "agents",
+      "usage": "agents: () => get<{ agents: AgentConnectionView[] }>(\"/api/agents\"),\n\n  /** The catalog of connectable agents, with the accounts you have added. */",
+      "types": []
+    },
+    {
+      "name": "agentAccounts",
+      "usage": "agentAccounts: () => get<AgentAccountsView>(\"/api/me/agent-accounts\"),",
+      "types": []
+    },
+    {
+      "name": "agentUsage",
+      "usage": "agentUsage: (filter: AgentUsageFilter) =>\n    get<AgentUsageReportView>(\n      `${filter.scope === \"all\" ? \"/api/admin/agent-usage\" : \"/api/me/agent-usage\"}${query({\n        days: String(filter.days),\n        account: filter.account,\n        source: filter.source,\n        limit: String(filter.limit),\n        offset: String(filter.offset),\n      })}`,\n    ),\n  /** Model defaults for agent work this developer starts directly. */",
+      "types": [
+        "AgentUsageFilter"
+      ]
+    },
+    {
+      "name": "agentRunPreferences",
+      "usage": "agentRunPreferences: () =>\n    get<AgentRunPreferencesView>(\"/api/me/agent-run-preferences\"),",
+      "types": []
+    },
+    {
+      "name": "setAgentRunPreferences",
+      "usage": "setAgentRunPreferences: (body: AgentRunPreferencesPatch) =>\n    send<AgentRunPreferencesView>(\"/api/me/agent-run-preferences\", \"PUT\", body),\n  /** For the paste-a-credential options. The delegated ones go through `startAgentLogin`. */\n  /** `values` is keyed by the option's field names — `{ AWS_REGION: \"us-east-1\", … }`. */",
+      "types": [
+        "AgentRunPreferencesPatch",
+        "AgentRunPreferencesView",
+        "LlmModel",
+        "LlmEffort"
+      ]
+    },
+    {
+      "name": "addAgentAccount",
+      "usage": "addAgentAccount: (body: {\n    optionId: string;\n    label: string;\n    values: Record<string, string>;\n  }) =>\n    send<AgentAccountView>(\"/api/me/agent-accounts\", \"POST\", body),\n  /** Points every agent run at this account, install-wide, from the next run on. */",
+      "types": []
+    },
+    {
+      "name": "useAgentAccountForRuns",
+      "usage": "useAgentAccountForRuns: (id: string) =>\n    send<AgentAccountView>(\"/api/me/agent-accounts/use-for-runs\", \"POST\", { id }),",
+      "types": []
+    },
+    {
+      "name": "deleteAgentAccount",
+      "usage": "deleteAgentAccount: (id: string) =>\n    send<{ id: string; removed: boolean }>(\n      `/api/me/agent-accounts?id=${encodeURIComponent(id)}`,\n      \"DELETE\",\n    ),\n  /** Runs the vendor's own login on the host — poll `agentLogin` for what it prints. */",
+      "types": []
+    },
+    {
+      "name": "startAgentLogin",
+      "usage": "startAgentLogin: (body: { optionId: string; label: string }) =>\n    send<AgentLoginView>(\"/api/me/agent-accounts/login\", \"POST\", body),",
+      "types": []
+    },
+    {
+      "name": "agentLogin",
+      "usage": "agentLogin: (id: string) =>\n    get<AgentLoginView>(`/api/me/agent-accounts/login?id=${encodeURIComponent(id)}`),\n  /** Answers whatever the command asked for — the pasted code, usually. */",
+      "types": []
+    },
+    {
+      "name": "respondAgentLogin",
+      "usage": "respondAgentLogin: (id: string, input: string) =>\n    send<AgentLoginView>(`/api/me/agent-accounts/login?id=${encodeURIComponent(id)}`, \"PUT\", {\n      input,\n    }),",
+      "types": []
+    },
+    {
+      "name": "cancelAgentLogin",
+      "usage": "cancelAgentLogin: (id: string) =>\n    send<{ id: string }>(\n      `/api/me/agent-accounts/login?id=${encodeURIComponent(id)}`,\n      \"DELETE\",\n    ),",
+      "types": []
+    },
+    {
+      "name": "jiraIssues",
+      "usage": "jiraIssues: (search: string, options?: { statuses?: string[] }) =>\n    get<{ issues: JiraIssueView[] }>(\n      `/api/jira/issues?search=${encodeURIComponent(search)}` +\n        (options?.statuses?.length\n          ? `&statuses=${encodeURIComponent(options.statuses.join(\",\"))}`\n          : \"\"),\n    ),",
+      "types": []
+    },
+    {
+      "name": "jiraUsers",
+      "usage": "jiraUsers: (project: string) =>\n    get<{ users: JiraUserView[] }>(\n      `/api/jira/users?project=${encodeURIComponent(project)}`,\n    ),",
+      "types": []
+    },
+    {
+      "name": "pullRequests",
+      "usage": "pullRequests: (\n    scope: PullRequestScope,\n    states: readonly PullRequestState[],\n    options?: ReadOptions,\n  ) =>\n    get<PullRequestsView>(\n      `/api/pull-requests?scope=${scope}&states=${states.join(\",\")}`,\n      options,\n    ),\n  // The id is provider-qualified and contains slashes (`gitlab:group/proj!12`), so\n  // it is encoded whole — the router matches one path segment and decodes it back.",
+      "types": [
+        "PullRequestScope",
+        "PullRequestState",
+        "ReadOptions"
+      ]
+    },
+    {
+      "name": "pullRequest",
+      "usage": "pullRequest: (id: string, options?: ReadOptions) =>\n    get<PullRequestDetailView>(`/api/pull-requests/${encodeURIComponent(id)}`, options),\n  // A `sha` narrows the diff to one commit on the branch. The server refuses a sha\n  // that is not on this merge request, so this is not a way to read the project.",
+      "types": [
+        "ReadOptions"
+      ]
+    },
+    {
+      "name": "pullRequestChanges",
+      "usage": "pullRequestChanges: (id: string, options?: ReadOptions & { sha?: string }) =>\n    get<PullRequestChangesView>(\n      `/api/pull-requests/${encodeURIComponent(id)}/changes${\n        options?.sha ? `/${encodeURIComponent(options.sha)}` : \"\"\n      }`,\n      options,\n    ),",
+      "types": [
+        "ReadOptions"
+      ]
+    },
+    {
+      "name": "pullRequestActions",
+      "usage": "pullRequestActions: (id: string) =>\n    get<PullRequestActionsView>(`/api/pull-requests/${encodeURIComponent(id)}/actions`),",
+      "types": []
+    },
+    {
+      "name": "pullRequestActivity",
+      "usage": "pullRequestActivity: (id: string) =>\n    get<PullRequestActivityView>(`/api/pull-requests/${encodeURIComponent(id)}/activity`),\n  // Every recorded run against this merge request, whoever started it — unlike\n  // `pullRequestActivity`, which reads the job queue and so covers only the\n  // toolbar's own clicks (plus anything still queued, which has no run yet).",
+      "types": []
+    },
+    {
+      "name": "pullRequestRuns",
+      "usage": "pullRequestRuns: (id: string, { limit, offset }: { limit: number; offset: number }) =>\n    get<PullRequestRunPageView>(\n      `/api/pull-requests/${encodeURIComponent(id)}/runs?limit=${limit}&offset=${offset}`,\n    ),",
+      "types": []
+    },
+    {
+      "name": "runPullRequestAction",
+      "usage": "runPullRequestAction: (id: string, action: PullRequestActionId) =>\n    send<PullRequestActionResult>(\n      `/api/pull-requests/${encodeURIComponent(id)}/actions`,\n      \"POST\",\n      { action },\n    ),",
+      "types": [
+        "PullRequestActionId"
+      ]
+    },
+    {
+      "name": "runPullRequestRevision",
+      "usage": "runPullRequestRevision: (\n    id: string,\n    instruction: string,\n    history: AssistantMessage[],\n  ) =>\n    send<PullRequestActionResult>(\n      `/api/pull-requests/${encodeURIComponent(id)}/actions`,\n      \"POST\",\n      { action: \"revise\", instruction, history },\n    ),\n  // Local to the job queue, no forge call — safe for the list page to poll on a\n  // short interval for a running badge, unlike `pullRequests` itself.",
+      "types": [
+        "AssistantMessage",
+        "AssistantMessageRole"
+      ]
+    },
+    {
+      "name": "pullRequestActiveActions",
+      "usage": "pullRequestActiveActions: () =>\n    get<PullRequestActiveActionsView>(\"/api/pull-requests/active-actions\"),",
+      "types": []
+    },
+    {
+      "name": "ticketGraph",
+      "usage": "ticketGraph: (\n    scope: PullRequestScope,\n    options?: ReadOptions,\n  ) =>\n    get<TicketGraphView>(\n      `/api/graph/tickets?scope=${scope}`,\n      options,\n    ),\n  /**\n   * One ticket in full, fetched when its node is selected rather than carried on\n   * the graph — see `TicketDetailView` for why the two are separate reads.\n   */",
+      "types": [
+        "PullRequestScope",
+        "ReadOptions"
+      ]
+    },
+    {
+      "name": "ticket",
+      "usage": "ticket: (key: string, options?: ReadOptions) =>\n    get<TicketDetailResponse>(`/api/tickets/${encodeURIComponent(key)}`, options),",
+      "types": [
+        "ReadOptions"
+      ]
+    },
+    {
+      "name": "ticketAttachmentText",
+      "usage": "ticketAttachmentText: (\n    key: string,\n    attachmentId: string,\n    options?: ReadOptions,\n  ) =>\n    get<TicketTextAttachmentResponse>(\n      `/api/tickets/${encodeURIComponent(key)}/attachments/${encodeURIComponent(attachmentId)}/text`,\n      options,\n    ),\n  /**\n   * The implementation plan waiting on this ticket, plus the plans that came before\n   * it. A separate read from `ticket` and from the graph: the document is kilobytes\n   * of markdown and only the Plan tab ever wants it.\n   */",
+      "types": [
+        "ReadOptions"
+      ]
+    },
+    {
+      "name": "ticketPlan",
+      "usage": "ticketPlan: (key: string, options?: ReadOptions) =>\n    get<TicketPlanView>(`/api/tickets/${encodeURIComponent(key)}/plan`, options),\n  /** Every plan waiting on somebody, across every ticket. */",
+      "types": [
+        "ReadOptions"
+      ]
+    },
+    {
+      "name": "planInbox",
+      "usage": "planInbox: () => get<PlanInboxView>(\"/api/plans\"),\n  /**\n   * Approve or reject one plan. On approve, `body` is the text the reviewer signed\n   * off — edits included — and it is what the container is handed, so it is sent\n   * whether or not it was edited rather than falling back to the draft server-side.\n   */",
+      "types": []
+    },
+    {
+      "name": "decidePlan",
+      "usage": "decidePlan: (planId: string, body: PlanDecisionRequest) =>\n    send<MrActionResult>(`/api/plans/${encodeURIComponent(planId)}/decision`, \"POST\", body),",
+      "types": [
+        "PlanDecisionRequest"
+      ]
+    },
+    {
+      "name": "runMrAction",
+      "usage": "runMrAction: (body: MrActionRequest) =>\n    send<MrActionResult>(\"/api/graph/mr-action\", \"POST\", body),\n  /** One of a ticket node's actions — see `TicketActionId`. */",
+      "types": [
+        "MrActionRequest",
+        "GraphNode",
+        "GraphNodeKind",
+        "RunStatus",
+        "GraphStatus",
+        "E2eTestResultView",
+        "E2eTestArtifactView",
+        "TicketFactsView",
+        "TicketPersonView",
+        "SprintView",
+        "TicketGraphView",
+        "MrActionId",
+        "PullRequestActionId"
+      ]
+    },
+    {
+      "name": "runTicketAction",
+      "usage": "runTicketAction: (\n    issueKey: string,\n    action: TicketActionId,\n    options: Pick<TicketActionRequest, \"targetBranch\" | \"pullRequest\"> = {},\n  ) =>\n    send<MrActionResult>(\"/api/graph/ticket-action\", \"POST\", {\n      issueKey,\n      action,\n      ...(options.targetBranch === undefined ? {} : { targetBranch: options.targetBranch }),\n      ...(options.pullRequest === undefined ? {} : { pullRequest: options.pullRequest }),\n    } satisfies TicketActionRequest),",
+      "types": [
+        "TicketActionId",
+        "TicketActionRequest"
+      ]
+    },
+    {
+      "name": "writeE2eTestMr",
+      "usage": "writeE2eTestMr: (body: E2eTestMrRequest) =>\n    send<MrActionResult>(\"/api/e2e/test-mr\", \"POST\", body),\n  /** Dragging a ticket to a new board column — see `TicketStatusChangeResult`. */",
+      "types": [
+        "E2eTestMrRequest"
+      ]
+    },
+    {
+      "name": "setTicketStatus",
+      "usage": "setTicketStatus: (issueKey: string, status: string, statusIds?: string[]) =>\n    send<TicketStatusChangeResult>(\"/api/graph/ticket-status\", \"POST\", {\n      issueKey,\n      status,\n      ...(statusIds ? { statusIds } : {}),\n    }),\n  // Null until the developer sets it — the graph's fix button explains itself\n  // from that, rather than failing on the click.",
+      "types": []
+    },
+    {
+      "name": "fixIssueDefaults",
+      "usage": "fixIssueDefaults: () => get<FixIssueDefaultsView | null>(\"/api/me/fix-issue-defaults\"),",
+      "types": []
+    },
+    {
+      "name": "setFixIssueDefaults",
+      "usage": "setFixIssueDefaults: (body: FixIssueDefaultsView) =>\n    send<FixIssueDefaultsView>(\"/api/me/fix-issue-defaults\", \"PUT\", body),\n  /**\n   * Every stored preference in one read — see `PreferencesView` for why it is not\n   * one request per key.\n   */",
+      "types": [
+        "FixIssueDefaultsView"
+      ]
+    },
+    {
+      "name": "preferences",
+      "usage": "preferences: () => get<PreferencesView>(\"/api/me/preferences\"),\n  /** One key. `null` clears it rather than storing null; see `PreferencePatch`. */",
+      "types": []
+    },
+    {
+      "name": "setPreference",
+      "usage": "setPreference: (key: string, value: unknown) =>\n    send<PreferencesView>(\"/api/me/preferences\", \"PUT\", { key, value }),",
+      "types": []
+    },
+    {
+      "name": "pullRequestRepoFilter",
+      "usage": "pullRequestRepoFilter: () => get<PullRequestRepoFilterView>(\"/api/me/pull-request-repos\"),",
+      "types": []
+    },
+    {
+      "name": "setPullRequestRepoFilter",
+      "usage": "setPullRequestRepoFilter: (repositories: string[]) =>\n    send<PullRequestRepoFilterView>(\"/api/me/pull-request-repos\", \"PUT\", { repositories }),",
+      "types": []
+    },
+    {
+      "name": "notifications",
+      "usage": "notifications: (unreadOnly?: boolean) =>\n    get<NotificationsView>(`/api/notifications${unreadOnly ? \"?unreadOnly=1\" : \"\"}`),",
+      "types": []
+    },
+    {
+      "name": "markNotificationsRead",
+      "usage": "markNotificationsRead: () => send<{ ok: boolean }>(\"/api/notifications/read-all\", \"POST\"),\n  /** Which notification kinds reach the bell — My notifications. */",
+      "types": []
+    },
+    {
+      "name": "notificationSubscriptions",
+      "usage": "notificationSubscriptions: () =>\n    get<NotificationSubscriptionsView>(\"/api/me/notification-subscriptions\"),\n  /**\n   * The whole set at once — what Save sends. Answers with the saved list, so the\n   * cache needs no refetch.\n   */",
+      "types": []
+    },
+    {
+      "name": "setNotificationSubscriptions",
+      "usage": "setNotificationSubscriptions: (body: NotificationSubscriptionsPatch) =>\n    send<NotificationSubscriptionsView>(\"/api/me/notification-subscriptions\", \"PUT\", body),\n\n  /** The signed-in developer's own account — My profile. */",
+      "types": [
+        "NotificationSubscriptionsPatch",
+        "NotificationSubscriptionPatch"
+      ]
+    },
+    {
+      "name": "profile",
+      "usage": "profile: () => get<ProfileView>(\"/api/me/profile\"),\n  /** Display name only; the address is the login and is not editable. */",
+      "types": []
+    },
+    {
+      "name": "updateProfile",
+      "usage": "updateProfile: (body: ProfilePatch) => send<ProfileView>(\"/api/me/profile\", \"PUT\", body),\n  /** Password re-entry, then gone — see `routeDeleteMyAccount`. */",
+      "types": [
+        "ProfilePatch"
+      ]
+    },
+    {
+      "name": "deleteAccount",
+      "usage": "deleteAccount: (password: string) =>\n    send<AccountDeletedView>(\"/api/me/profile\", \"DELETE\", { password }),",
+      "types": []
+    },
+    {
+      "name": "search",
+      "usage": "search: (query: string, options?: ReadOptions) =>\n    get<SearchResult>(\n      `/api/search${query ? `?q=${encodeURIComponent(query)}` : \"\"}`,\n      options,\n    ),",
+      "types": [
+        "ReadOptions"
+      ]
+    },
+    {
+      "name": "steps",
+      "usage": "steps: (executionId: string) =>\n    get<{ executionId: string; steps: StepView[]; logs?: LogLineView[] }>(\n      `/api/task-runs/${encodeURIComponent(executionId)}/steps?logs=none`,\n    ),",
+      "types": []
+    },
+    {
+      "name": "runJiraOutcomes",
+      "usage": "runJiraOutcomes: (executionId: string) =>\n    get<RunJiraOutcomesView>(\n      `/api/task-runs/${encodeURIComponent(executionId)}/jira-outcomes`,\n    ),",
+      "types": []
+    },
+    {
+      "name": "logPage",
+      "usage": "logPage: (executionId: string, afterLogId: number, limit = 200) =>\n    get<{\n      executionId: string;\n      logs: LogLineView[];\n      nextCursor: number;\n      hasMore: boolean;\n      status: \"running\" | \"success\" | \"failure\" | \"cancelled\";\n    }>(\n      `/api/task-runs/${encodeURIComponent(executionId)}/logs?afterLogId=${afterLogId}&limit=${limit}`,\n    ),",
+      "types": []
+    },
+    {
+      "name": "logTail",
+      "usage": "logTail: (executionId: string, beforeLogId?: number, limit = 500) =>\n    get<{\n      executionId: string;\n      logs: LogLineView[];\n      previousCursor: number;\n      hasOlder: boolean;\n      status: \"running\" | \"success\" | \"failure\" | \"cancelled\";\n    }>(\n      `/api/task-runs/${encodeURIComponent(executionId)}/logs?${\n        beforeLogId == null ? \"tail=1\" : `beforeLogId=${beforeLogId}`\n      }&limit=${limit}`,\n    ),",
+      "types": []
+    },
+    {
+      "name": "updateSchedule",
+      "usage": "updateSchedule: (id: string, patch: SchedulePatch) =>\n    send<ScheduleView>(\n      `/api/tasks/${encodeURIComponent(id)}/schedule`,\n      \"PUT\",\n      patch,\n    ),",
+      "types": [
+        "SchedulePatch",
+        "Trigger"
+      ]
+    },
+    {
+      "name": "clearSchedule",
+      "usage": "clearSchedule: (id: string) =>\n    send<ScheduleView>(\n      `/api/tasks/${encodeURIComponent(id)}/schedule`,\n      \"DELETE\",\n    ),",
+      "types": []
+    },
+    {
+      "name": "runTask",
+      "usage": "runTask: (id: string, params?: unknown) =>\n    send<TaskRunStartedView>(\n      `/api/tasks/${encodeURIComponent(id)}/run`,\n      \"POST\",\n      params,\n    ),",
+      "types": []
+    },
+    {
+      "name": "cancelTask",
+      "usage": "cancelTask: (id: string) =>\n    send<{ taskId: string; runs: { executionId: string; status: string }[] }>(\n      `/api/tasks/${encodeURIComponent(id)}/cancel`,\n      \"POST\",\n    ),",
+      "types": []
+    },
+    {
+      "name": "cancelRun",
+      "usage": "cancelRun: (executionId: string) =>\n    send<{ executionId: string; status: string }>(\n      `/api/task-runs/${encodeURIComponent(executionId)}/cancel`,\n      \"POST\",\n    ),\n  /**\n   * Drops a queued job, or aborts the run of one already leased.\n   *\n   * Not `cancelRun` on the job's `executionId`: a queued job has no run yet, and\n   * cancelling only the run of a leased one lets the queue hand the work to the\n   * next worker (see `CancellationService.cancelJob`).\n   */",
+      "types": []
+    },
+    {
+      "name": "cancelJob",
+      "usage": "cancelJob: (jobId: string) =>\n    send<JobCancelResult>(`/api/jobs/${encodeURIComponent(jobId)}/cancel`, \"POST\"),",
+      "types": []
+    },
+    {
+      "name": "settings",
+      "usage": "settings: () => get<GeneralSettings>(\"/api/settings\"),",
+      "types": []
+    },
+    {
+      "name": "resolvedModels",
+      "usage": "resolvedModels: () => get<ResolvedModelsView>(\"/api/settings/resolved-models\"),",
+      "types": []
+    },
+    {
+      "name": "updateSettings",
+      "usage": "updateSettings: (patch: GeneralSettingsPatch) =>\n    send<GeneralSettings>(\"/api/settings\", \"PUT\", patch),",
+      "types": [
+        "GeneralSettingsPatch",
+        "LogLevel"
+      ]
+    },
+    {
+      "name": "e2eTestSettings",
+      "usage": "e2eTestSettings: () => get<E2eTestSettingsView>(\"/api/settings/e2e-tests\"),",
+      "types": []
+    },
+    {
+      "name": "updateE2eTestSettings",
+      "usage": "updateE2eTestSettings: (patch: E2eTestSettingsPatch) =>\n    send<E2eTestSettingsView>(\"/api/settings/e2e-tests\", \"PUT\", patch),",
+      "types": [
+        "E2eTestSettingsPatch"
+      ]
+    },
+    {
+      "name": "prompts",
+      "usage": "prompts: () => get<PromptsView>(\"/api/prompts\"),",
+      "types": []
+    },
+    {
+      "name": "updatePrompts",
+      "usage": "updatePrompts: (patch: PromptsPatch) =>\n    send<PromptsView>(\"/api/prompts\", \"PUT\", patch),",
+      "types": [
+        "PromptsPatch"
+      ]
+    },
+    {
+      "name": "releases",
+      "usage": "releases: (options?: ReadOptions) => get<ReleasesView>(\"/api/releases\", options),",
+      "types": [
+        "ReadOptions"
+      ]
+    },
+    {
+      "name": "confluenceReleases",
+      "usage": "confluenceReleases: (options?: ReadOptions) =>\n    get<ConfluenceReleasesView>(\"/api/releases/confluence\", options),",
+      "types": [
+        "ReadOptions"
+      ]
+    },
+    {
+      "name": "confluenceRelease",
+      "usage": "confluenceRelease: (pageId: string) =>\n    get<ConfluenceReleaseDetailView>(\n      `/api/releases/confluence?pageId=${encodeURIComponent(pageId)}`,\n    ),",
+      "types": []
+    },
+    {
+      "name": "uploadRelease",
+      "usage": "uploadRelease: (body: ReleaseUploadRequest) =>\n    send<ReleaseUploadResultView>(\"/api/releases/upload\", \"POST\", body),",
+      "types": [
+        "ReleaseUploadRequest",
+        "ManifestSection"
+      ]
+    },
+    {
+      "name": "releaseRevertPreview",
+      "usage": "releaseRevertPreview: (environment: string, options?: ReadOptions) =>\n    get<ReleaseRevertPreviewView>(\n      `/api/releases/revert?environment=${encodeURIComponent(environment)}`,\n      options,\n    ),",
+      "types": [
+        "ReadOptions"
+      ]
+    },
+    {
+      "name": "revertRelease",
+      "usage": "revertRelease: (body: ReleaseRevertRequest) =>\n    send<ReleaseUploadResultView>(\"/api/releases/revert\", \"POST\", body),",
+      "types": [
+        "ReleaseRevertRequest"
+      ]
+    },
+    {
+      "name": "releaseWatches",
+      "usage": "releaseWatches: () => get<DeployWatchesView>(\"/api/releases/watches\"),",
+      "types": []
+    },
+    {
+      "name": "releaseDeploymentStatus",
+      "usage": "releaseDeploymentStatus: (\n    body: ReleaseDeploymentStatusRequest,\n    options?: Pick<ReadOptions, \"signal\">,\n  ) =>\n    request<ReleaseDeploymentStatusView>(\"/api/releases/deployment-status\", {\n      method: \"POST\",\n      body,\n      ...(options?.signal ? { signal: options.signal } : {}),\n    }),\n  /**\n   * Past deployments. `limit` is a number of commits rather than a page: the\n   * history tab widens the window instead of paging, because \"further back\" is\n   * the only direction anybody reads it in.\n   */",
+      "types": [
+        "ReleaseDeploymentStatusRequest",
+        "EnvironmentVersionView",
+        "ServiceVersionView",
+        "ManifestSection",
+        "ReadOptions"
+      ]
+    },
+    {
+      "name": "releaseHistory",
+      "usage": "releaseHistory: (limit: number, options: ReleaseHistoryReadOptions = {}) => {\n    const params = new URLSearchParams({ limit: String(limit) });\n    if (options.environment) params.set(\"environment\", options.environment);\n    if (options.since) params.set(\"since\", options.since);\n    return get<ReleaseHistoryView>(`/api/releases/history?${params}`, options);\n  },",
+      "types": [
+        "ReleaseHistoryReadOptions",
+        "ReadOptions"
+      ]
+    },
+    {
+      "name": "integrations",
+      "usage": "integrations: () => get<IntegrationsView>(\"/api/settings/integrations\"),",
+      "types": []
+    },
+    {
+      "name": "logRocketIssues",
+      "usage": "logRocketIssues: (filter?: LogRocketIssuesFilter) =>\n    get<LogRocketIssuesView>(`/api/logrocket/issues${logRocketQuery(filter)}`),",
+      "types": [
+        "LogRocketIssuesFilter"
+      ]
+    },
+    {
+      "name": "fixLogRocketIssue",
+      "usage": "fixLogRocketIssue: (id: string) =>\n    send<LogRocketFixResult>(\n      `/api/logrocket/issues/${encodeURIComponent(id)}/fix`,\n      \"POST\",\n      {},\n    ),\n  // `filter` decides which list comes back, so pass the one on screen: the answer\n  // is written into that cache entry without a refetch.",
+      "types": []
+    },
+    {
+      "name": "setLogRocketIssueState",
+      "usage": "setLogRocketIssueState: (\n    id: string,\n    state: LogRocketStatePatch[\"state\"],\n    filter?: LogRocketIssuesFilter,\n  ) =>\n    send<LogRocketIssuesView>(\n      `/api/logrocket/issues/${encodeURIComponent(id)}/state${logRocketQuery(filter)}`,\n      \"POST\",\n      { state } satisfies LogRocketStatePatch,\n    ),\n  // Queues the agent that writes a failing test for this error. No Jira ticket is\n  // filed on the way, unlike `fixLogRocketIssue`: a test is worth having whether or\n  // not anybody is tracking the bug.",
+      "types": [
+        "LogRocketStatePatch",
+        "LogRocketIssuesFilter"
+      ]
+    },
+    {
+      "name": "writeLogRocketRegressionTest",
+      "usage": "writeLogRocketRegressionTest: (id: string) =>\n    send<RegressionTestResult>(\n      `/api/logrocket/issues/${encodeURIComponent(id)}/regression-test`,\n      \"POST\",\n      {},\n    ),",
+      "types": []
+    },
+    {
+      "name": "datadogIssues",
+      "usage": "datadogIssues: (filter?: DatadogIssuesFilter) =>\n    get<DatadogIssuesView>(`/api/datadog/issues${datadogQuery(filter)}`),",
+      "types": [
+        "DatadogIssuesFilter",
+        "DatadogAreaView"
+      ]
+    },
+    {
+      "name": "datadogActivity",
+      "usage": "datadogActivity: ({ limit, offset }: { limit: number; offset: number }) =>\n    get<DatadogActivityView>(`/api/datadog/activity?limit=${limit}&offset=${offset}`),",
+      "types": []
+    },
+    {
+      "name": "datadogRuns",
+      "usage": "datadogRuns: async ({ limit, offset }: { limit: number; offset: number }) => {\n    const { runs, total } = await get<DatadogActivityView>(\n      `/api/datadog/activity?limit=${limit}&offset=${offset}`,\n    );\n    return { runs, total } satisfies TaskRunPage;\n  },\n  // Keyed by problem, not by signature: one root cause is one ticket and one\n  // dismissal, and the server fans the action out to every member row.",
+      "types": []
+    },
+    {
+      "name": "fixDatadogProblem",
+      "usage": "fixDatadogProblem: (key: string) =>\n    send<DatadogFixResult>(\n      `/api/datadog/problems/${encodeURIComponent(key)}/fix`,\n      \"POST\",\n      {},\n    ),\n  // As with LogRocket: `filter` names the list to answer with, which is the one the\n  // caller then writes into its own cache entry.",
+      "types": []
+    },
+    {
+      "name": "setDatadogProblemState",
+      "usage": "setDatadogProblemState: (\n    key: string,\n    state: DatadogStatePatch[\"state\"],\n    filter?: DatadogIssuesFilter,\n  ) =>\n    send<DatadogIssuesView>(\n      `/api/datadog/problems/${encodeURIComponent(key)}/state${datadogQuery(filter)}`,\n      \"POST\",\n      { state } satisfies DatadogStatePatch,\n    ),\n  // Also keyed by problem: the server picks the member signature with a stack\n  // trace, since that is the one an agent can actually work from.",
+      "types": [
+        "DatadogStatePatch",
+        "DatadogIssuesFilter",
+        "DatadogAreaView"
+      ]
+    },
+    {
+      "name": "writeDatadogRegressionTest",
+      "usage": "writeDatadogRegressionTest: (key: string, body: RegressionTestRequest = {}) =>\n    send<RegressionTestResult>(\n      `/api/datadog/problems/${encodeURIComponent(key)}/regression-test`,\n      \"POST\",\n      body,\n    ),",
+      "types": [
+        "RegressionTestRequest"
+      ]
+    },
+    {
+      "name": "triageDatadogProblem",
+      "usage": "triageDatadogProblem: (key: string) =>\n    send<DatadogAiTriageResult>(\n      `/api/datadog/problems/${encodeURIComponent(key)}/ai-triage`,\n      \"POST\",\n      {},\n    ),\n  // Synchronous and slow by nature — a scan is ~20 aggregation calls against\n  // Datadog — so callers show a spinner rather than polling for a result.",
+      "types": []
+    },
+    {
+      "name": "scanDatadog",
+      "usage": "scanDatadog: () => send<DatadogScanResult>(\"/api/datadog/scan\", \"POST\", {}),",
+      "types": []
+    },
+    {
+      "name": "datadogRouting",
+      "usage": "datadogRouting: () => get<DatadogRoutingView>(\"/api/datadog/routing\"),",
+      "types": []
+    },
+    {
+      "name": "datadogServiceTargets",
+      "usage": "datadogServiceTargets: () =>\n    get<DatadogServiceTargetsView>(\"/api/datadog/service-targets\"),",
+      "types": []
+    },
+    {
+      "name": "setDatadogServiceTarget",
+      "usage": "setDatadogServiceTarget: (service: string, body: DatadogServiceTargetPatch) =>\n    send<DatadogServiceTargetView>(\n      `/api/datadog/service-targets/${encodeURIComponent(service)}`,\n      \"PUT\",\n      body,\n    ),",
+      "types": [
+        "DatadogServiceTargetPatch"
+      ]
+    },
+    {
+      "name": "deleteDatadogServiceTarget",
+      "usage": "deleteDatadogServiceTarget: (service: string) =>\n    send<DatadogServiceTargetsView>(\n      `/api/datadog/service-targets/${encodeURIComponent(service)}`,\n      \"DELETE\",\n    ),",
+      "types": []
+    },
+    {
+      "name": "createDatadogRule",
+      "usage": "createDatadogRule: (body: DatadogRoutingRulePatch) =>\n    send<DatadogRoutingRuleView>(\"/api/datadog/routing\", \"POST\", body),",
+      "types": [
+        "DatadogRoutingRulePatch",
+        "DatadogRoutingRuleView",
+        "DatadogAreaView"
+      ]
+    },
+    {
+      "name": "updateDatadogRule",
+      "usage": "updateDatadogRule: (id: string, body: DatadogRoutingRulePatch) =>\n    send<DatadogRoutingRuleView>(\n      `/api/datadog/routing/${encodeURIComponent(id)}`,\n      \"POST\",\n      body,\n    ),",
+      "types": [
+        "DatadogRoutingRulePatch",
+        "DatadogRoutingRuleView",
+        "DatadogAreaView"
+      ]
+    },
+    {
+      "name": "deleteDatadogRule",
+      "usage": "deleteDatadogRule: (id: string) =>\n    send<DatadogRoutingView>(\n      `/api/datadog/routing/${encodeURIComponent(id)}`,\n      \"DELETE\",\n    ),",
+      "types": []
+    },
+    {
+      "name": "flakySpecs",
+      "usage": "flakySpecs: (filter?: FlakySpecsFilter) =>\n    get<FlakySpecsView>(`/api/flaky-specs${flakySpecsQuery(filter)}`),\n  // `filter` is separate from the `project` in the body on purpose: the body names\n  // the spec being dismissed, the query names the list to answer with. They are\n  // usually the same project, but the panel can be showing every project at once.",
+      "types": [
+        "FlakySpecsFilter"
+      ]
+    },
+    {
+      "name": "setFlakySpecState",
+      "usage": "setFlakySpecState: (\n    project: string,\n    specFile: string,\n    state: FlakySpecStatePatch[\"state\"],\n    filter?: FlakySpecsFilter,\n  ) =>\n    send<FlakySpecsView>(`/api/flaky-specs/state${flakySpecsQuery(filter)}`, \"POST\", {\n      project,\n      specFile,\n      state,\n    } satisfies FlakySpecStatePatch),\n  // Records an override rather than filing: the loop builds the ticket on its next\n  // run -- see `FlakySpecFileResult`.",
+      "types": [
+        "FlakySpecStatePatch",
+        "FlakySpecsFilter"
+      ]
+    },
+    {
+      "name": "fileFlakySpec",
+      "usage": "fileFlakySpec: (project: string, specFile: string) =>\n    send<FlakySpecFileResult>(\"/api/flaky-specs/file\", \"POST\", { project, specFile }),",
+      "types": []
+    },
+    {
+      "name": "submitFeedback",
+      "usage": "submitFeedback: (feedback: FeedbackRequest, attachments: readonly File[] = []) => {\n    if (attachments.length === 0) {\n      return send<FeedbackView>(\"/api/feedback\", \"POST\", feedback);\n    }\n    const formData = new FormData();\n    formData.set(\"type\", feedback.type);\n    formData.set(\"title\", feedback.title);\n    formData.set(\"description\", feedback.description);\n    for (const attachment of attachments) formData.append(\"attachments\", attachment);\n    return request<FeedbackView>(\"/api/feedback\", { method: \"POST\", formData });\n  },",
+      "types": [
+        "FeedbackRequest",
+        "FeedbackType"
+      ]
+    },
+    {
+      "name": "pendingFeedback",
+      "usage": "pendingFeedback: () => get<PendingFeedbackView>(\"/api/feedback/pending\"),",
+      "types": []
+    },
+    {
+      "name": "publishFeedback",
+      "usage": "publishFeedback: (id: string) =>\n    send<FeedbackView>(`/api/feedback/${encodeURIComponent(id)}/publish`, \"POST\"),",
+      "types": []
+    },
+    {
+      "name": "updateIntegrations",
+      "usage": "updateIntegrations: (patch: IntegrationsPatch) =>\n    send<IntegrationsView>(\"/api/settings/integrations\", \"PUT\", patch),\n\n  /** Your own GitLab/Jira identity — My provider access, not the instance settings. */",
+      "types": [
+        "IntegrationsPatch",
+        "IntegrationFieldState"
+      ]
+    },
+    {
+      "name": "providerAccess",
+      "usage": "providerAccess: () => get<ProviderAccessView>(\"/api/me/credentials\"),\n  /** A whole card at once: `null` removes the user's credential and disconnects that identity. */",
+      "types": []
+    },
+    {
+      "name": "updateProviderAccess",
+      "usage": "updateProviderAccess: (patch: ProviderAccessPatch) =>\n    send<ProviderAccessView>(\"/api/me/credentials\", \"PUT\", patch),",
+      "types": [
+        "ProviderAccessPatch"
+      ]
+    },
+    {
+      "name": "slackConnection",
+      "usage": "slackConnection: () => get<SlackConnectionView>(\"/api/me/slack/connection\"),",
+      "types": []
+    },
+    {
+      "name": "slackActivity",
+      "usage": "slackActivity: () => get<SlackActivityView>(\"/api/me/slack/activity\"),",
+      "types": []
+    },
+    {
+      "name": "resyncSlack",
+      "usage": "resyncSlack: () => send<{ ok: boolean }>(\"/api/me/slack/resync\", \"POST\"),",
+      "types": []
+    },
+    {
+      "name": "startSlackOAuth",
+      "usage": "startSlackOAuth: () =>\n    send<SlackOAuthStartView>(\"/api/me/slack/oauth/start\", \"POST\"),",
+      "types": []
+    },
+    {
+      "name": "disconnectSlack",
+      "usage": "disconnectSlack: () =>\n    send<{ removed: boolean }>(\"/api/me/slack/connection\", \"DELETE\"),",
+      "types": []
+    },
+    {
+      "name": "slackChannels",
+      "usage": "slackChannels: () => get<SlackChannelsView>(\"/api/me/slack/channels\"),",
+      "types": []
+    },
+    {
+      "name": "setSlackChannels",
+      "usage": "setSlackChannels: (patch: SlackChannelSelectionPatch) =>\n    send<SlackChannelsView>(\"/api/me/slack/channels\", \"PUT\", patch),",
+      "types": [
+        "SlackChannelSelectionPatch"
+      ]
+    },
+    {
+      "name": "slackInbox",
+      "usage": "slackInbox: (cursor?: string, options?: ReadOptions) =>\n    get<SlackInboxView>(\n      `/api/slack/inbox${cursor ? `?cursor=${encodeURIComponent(cursor)}` : \"\"}`,\n      options,\n    ),",
+      "types": [
+        "ReadOptions"
+      ]
+    },
+    {
+      "name": "slackUsers",
+      "usage": "slackUsers: (query?: string, options?: ReadOptions) =>\n    get<SlackWorkspaceUsersView>(\n      `/api/slack/users${query ? `?q=${encodeURIComponent(query)}` : \"\"}`,\n      options,\n    ),",
+      "types": [
+        "ReadOptions"
+      ]
+    },
+    {
+      "name": "slackUserProfile",
+      "usage": "slackUserProfile: (userId: string, options?: ReadOptions) =>\n    get<SlackUserProfileView>(\n      `/api/slack/users/${encodeURIComponent(userId)}/profile`,\n      options,\n    ),",
+      "types": [
+        "ReadOptions"
+      ]
+    },
+    {
+      "name": "slackConversationMembers",
+      "usage": "slackConversationMembers: (conversationId: string, options?: ReadOptions) =>\n    get<SlackConversationMembersView>(\n      `/api/slack/conversations/${encodeURIComponent(conversationId)}/members`,\n      options,\n    ),",
+      "types": [
+        "ReadOptions"
+      ]
+    },
+    {
+      "name": "slackConversationDetails",
+      "usage": "slackConversationDetails: (conversationId: string, options?: ReadOptions) =>\n    get<SlackConversationDetailsView>(\n      `/api/slack/conversations/${encodeURIComponent(conversationId)}/details`,\n      options,\n    ),",
+      "types": [
+        "ReadOptions"
+      ]
+    },
+    {
+      "name": "updateSlackConversationDetails",
+      "usage": "updateSlackConversationDetails: (\n    conversationId: string,\n    patch: SlackConversationDetailsPatch,\n  ) =>\n    send<SlackConversationDetailsView>(\n      `/api/slack/conversations/${encodeURIComponent(conversationId)}/details`,\n      \"PATCH\",\n      patch,\n    ),",
+      "types": [
+        "SlackConversationDetailsPatch"
+      ]
+    },
+    {
+      "name": "searchSlackConversation",
+      "usage": "searchSlackConversation: (\n    conversationId: string,\n    search: string,\n    page = 1,\n    filters: SlackConversationSearchFilters = {},\n    options?: ReadOptions,\n  ) => {\n    const params = new URLSearchParams({\n      q: search,\n      page: String(page),\n      ...(filters.fromMe ? { fromMe: \"true\" } : {}),\n      ...(filters.includesMe ? { includesMe: \"true\" } : {}),\n      ...(filters.hasLink ? { hasLink: \"true\" } : {}),\n      ...(filters.threadsOnly ? { threadsOnly: \"true\" } : {}),\n    });\n    return get<SlackConversationSearchView>(\n      `/api/slack/conversations/${encodeURIComponent(conversationId)}/search?${params}`,\n      options,\n    );\n  },",
+      "types": [
+        "SlackConversationSearchFilters",
+        "ReadOptions"
+      ]
+    },
+    {
+      "name": "openSlackDirectMessage",
+      "usage": "openSlackDirectMessage: (body: SlackDirectMessageRequest) =>\n    send<SlackConversationView>(\"/api/slack/direct-messages\", \"POST\", body),",
+      "types": [
+        "SlackDirectMessageRequest"
+      ]
+    },
+    {
+      "name": "hideSlackDirectMessage",
+      "usage": "hideSlackDirectMessage: (conversationId: string) =>\n    send<{ hidden: boolean }>(\n      `/api/slack/direct-messages/${encodeURIComponent(conversationId)}`,\n      \"DELETE\",\n    ),",
+      "types": []
+    },
+    {
+      "name": "slackMessages",
+      "usage": "slackMessages: (\n    conversationId: string,\n    cursor?: string,\n    options?: ReadOptions,\n    focus?: string,\n  ) =>\n    get<SlackMessagesView>(\n      `/api/slack/conversations/${encodeURIComponent(conversationId)}/messages${\n        cursor || focus\n          ? `?${new URLSearchParams({\n              ...(cursor ? { cursor } : {}),\n              ...(focus ? { focus } : {}),\n            }).toString()}`\n          : \"\"\n      }`,\n      options,\n    ),",
+      "types": [
+        "ReadOptions"
+      ]
+    },
+    {
+      "name": "sendSlackMessage",
+      "usage": "sendSlackMessage: (conversationId: string, body: SlackMessageSendRequest) =>\n    send<SlackMessageSendResult>(\n      `/api/slack/conversations/${encodeURIComponent(conversationId)}/messages`,\n      \"POST\",\n      body,\n    ),",
+      "types": [
+        "SlackMessageSendRequest"
+      ]
+    },
+    {
+      "name": "updateSlackMessage",
+      "usage": "updateSlackMessage: (\n    conversationId: string,\n    timestamp: string,\n    body: SlackMessageUpdateRequest,\n  ) =>\n    send<SlackMessageUpdateResult>(\n      `/api/slack/conversations/${encodeURIComponent(conversationId)}/messages/${encodeURIComponent(timestamp)}`,\n      \"PUT\",\n      body,\n    ),",
+      "types": [
+        "SlackMessageUpdateRequest"
+      ]
+    },
+    {
+      "name": "deleteSlackMessage",
+      "usage": "deleteSlackMessage: (conversationId: string, timestamp: string) =>\n    send<{ ok: boolean }>(\n      `/api/slack/conversations/${encodeURIComponent(conversationId)}/messages/${encodeURIComponent(timestamp)}`,\n      \"DELETE\",\n    ),",
+      "types": []
+    },
+    {
+      "name": "setSlackReaction",
+      "usage": "setSlackReaction: (\n    conversationId: string,\n    timestamp: string,\n    body: SlackReactionPatch,\n  ) =>\n    send<{ ok: boolean }>(\n      `/api/slack/conversations/${encodeURIComponent(conversationId)}/messages/${encodeURIComponent(timestamp)}/reaction`,\n      \"POST\",\n      body,\n    ),",
+      "types": [
+        "SlackReactionPatch"
+      ]
+    },
+    {
+      "name": "slackImageUrl",
+      "usage": "slackImageUrl: (\n    conversationId: string,\n    fileId: string,\n    variant: \"thumbnail\" | \"original\",\n  ) =>\n    `/api/slack/conversations/${encodeURIComponent(conversationId)}/files/${encodeURIComponent(fileId)}${\n      variant === \"thumbnail\" ? \"?variant=thumbnail\" : \"\"\n    }`,",
+      "types": []
+    },
+    {
+      "name": "uploadSlackImages",
+      "usage": "uploadSlackImages: (\n    conversationId: string,\n    input: { images: readonly File[]; text?: string; threadTs?: string },\n  ) => {\n    const formData = new FormData();\n    for (const image of input.images) formData.append(\"images\", image);\n    if (input.text) formData.set(\"text\", input.text);\n    if (input.threadTs) formData.set(\"threadTs\", input.threadTs);\n    return request<SlackMessageSendResult>(\n      `/api/slack/conversations/${encodeURIComponent(conversationId)}/images`,\n      { method: \"POST\", formData },\n    );\n  },",
+      "types": []
+    },
+    {
+      "name": "slackThread",
+      "usage": "slackThread: (\n    conversationId: string,\n    threadTs: string,\n    cursor?: string,\n    options?: ReadOptions,\n    focus?: string,\n  ) =>\n    get<SlackMessagesView>(\n      `/api/slack/conversations/${encodeURIComponent(conversationId)}/threads/${encodeURIComponent(threadTs)}${\n        cursor || focus\n          ? `?${new URLSearchParams({\n              ...(cursor ? { cursor } : {}),\n              ...(focus ? { focus } : {}),\n            }).toString()}`\n          : \"\"\n      }`,\n      options,\n    ),",
+      "types": [
+        "ReadOptions"
+      ]
+    },
+    {
+      "name": "markSlackRead",
+      "usage": "markSlackRead: (patch: SlackReadPatch) =>\n    send<{ ok: boolean }>(\"/api/me/slack/read\", \"POST\", patch),",
+      "types": [
+        "SlackReadPatch"
+      ]
+    },
+    {
+      "name": "releaseConfig",
+      "usage": "releaseConfig: () => get<ReleaseConfigView>(\"/api/releases/config\"),",
+      "types": []
+    },
+    {
+      "name": "setReleaseConfig",
+      "usage": "setReleaseConfig: (patch: ReleaseConfigPatch) =>\n    send<ReleaseConfigView>(\"/api/releases/config\", \"PUT\", patch),",
+      "types": [
+        "ReleaseConfigPatch"
+      ]
+    },
+    {
+      "name": "talosUsers",
+      "usage": "talosUsers: () => get<TalosUsersView>(\"/api/users\"),",
+      "types": []
+    },
+    {
+      "name": "automationDashboard",
+      "usage": "automationDashboard: (filter: AutomationDashboardFilter) =>\n    get<AutomationDashboardView>(\n      `/api/automation/dashboard${query({\n        days: String(filter.days),\n        scheduleId: filter.scheduleId == null ? undefined : String(filter.scheduleId),\n        status: filter.status,\n        limit: String(filter.limit ?? 25),\n        offset: String(filter.offset ?? 0),\n      })}`,\n    ),",
+      "types": [
+        "AutomationDashboardFilter"
+      ]
+    },
+    {
+      "name": "automationPipeline",
+      "usage": "automationPipeline: (pipelineId: number) =>\n    get<AutomationPipelineDetailView>(\n      `/api/automation/pipelines/${encodeURIComponent(String(pipelineId))}`,\n    ),",
+      "types": []
+    },
+    {
+      "name": "automationFailureInbox",
+      "usage": "automationFailureInbox: (filter: AutomationFailureInboxFilter) =>\n    get<AutomationFailureInboxView>(\n      `/api/automation/failure-inbox${query({\n        days: String(filter.days),\n        scheduleId:\n          filter.scheduleId == null ? undefined : String(filter.scheduleId),\n        pipelineId:\n          filter.pipelineId == null ? undefined : String(filter.pipelineId),\n        presence: filter.presence,\n        state: filter.state,\n        search: filter.search?.trim() || undefined,\n        limit: String(filter.limit),\n        offset: String(filter.offset),\n      })}`,\n    ),",
+      "types": [
+        "AutomationFailureInboxFilter"
+      ]
+    },
+    {
+      "name": "automationFailureClusters",
+      "usage": "automationFailureClusters: (\n    pipelineId: number,\n    filter: AutomationFailureClusterFilter,\n  ) =>\n    get<AutomationFailureClusterListView>(\n      `/api/automation/pipelines/${encodeURIComponent(String(pipelineId))}/failure-clusters${query({\n        limit: String(filter.limit),\n        offset: String(filter.offset),\n        search: filter.search?.trim() || undefined,\n        jobId: filter.jobId == null ? undefined : String(filter.jobId),\n        suiteIndex: filter.suiteIndex == null ? undefined : String(filter.suiteIndex),\n        state: filter.state,\n      })}`,\n    ),",
+      "types": [
+        "AutomationFailureClusterFilter"
+      ]
+    },
+    {
+      "name": "automationFailureCluster",
+      "usage": "automationFailureCluster: (pipelineId: number, signatureKey: string) =>\n    get<AutomationFailureClusterDetailView>(\n      `/api/automation/pipelines/${encodeURIComponent(String(pipelineId))}/failure-clusters/${encodeURIComponent(signatureKey)}`,\n    ),",
+      "types": []
+    },
+    {
+      "name": "triageAutomationFailure",
+      "usage": "triageAutomationFailure: (pipelineId: number, signatureKey: string) =>\n    send<AutomationAiTriageActionView>(\n      `/api/automation/pipelines/${encodeURIComponent(String(pipelineId))}/failure-clusters/${encodeURIComponent(signatureKey)}/triage`,\n      \"POST\",\n    ),",
+      "types": []
+    },
+    {
+      "name": "assignAutomationFailure",
+      "usage": "assignAutomationFailure: (\n    pipelineId: number,\n    signatureKey: string,\n    body: AutomationFailureAssignmentPatch,\n  ) =>\n    send<AutomationFailureAssignmentView>(\n      `/api/automation/pipelines/${encodeURIComponent(String(pipelineId))}/failure-clusters/${encodeURIComponent(signatureKey)}/assignee`,\n      \"PUT\",\n      body,\n    ),",
+      "types": [
+        "AutomationFailureAssignmentPatch"
+      ]
+    },
+    {
+      "name": "automationFailureTicketDraft",
+      "usage": "automationFailureTicketDraft: (pipelineId: number, signatureKey: string) =>\n    get<AutomationTicketDraftView>(\n      `/api/automation/pipelines/${encodeURIComponent(String(pipelineId))}/failure-clusters/${encodeURIComponent(signatureKey)}/ticket`,\n    ),",
+      "types": []
+    },
+    {
+      "name": "createAutomationFailureTicket",
+      "usage": "createAutomationFailureTicket: (\n    pipelineId: number,\n    signatureKey: string,\n    body: AutomationTicketActionPatch,\n  ) =>\n    send<AutomationTicketActionView>(\n      `/api/automation/pipelines/${encodeURIComponent(String(pipelineId))}/failure-clusters/${encodeURIComponent(signatureKey)}/ticket`,\n      \"POST\",\n      body,\n    ),",
+      "types": [
+        "AutomationTicketActionPatch"
+      ]
+    },
+    {
+      "name": "createAutomationFailureTickets",
+      "usage": "createAutomationFailureTickets: (\n    pipelineId: number,\n    body: AutomationBulkTicketActionPatch,\n  ) =>\n    send<AutomationBulkTicketActionView>(\n      `/api/automation/pipelines/${encodeURIComponent(String(pipelineId))}/failure-clusters/bulk-ticket`,\n      \"POST\",\n      body,\n    ),",
+      "types": [
+        "AutomationBulkTicketActionPatch"
+      ]
+    },
+    {
+      "name": "automationConfig",
+      "usage": "automationConfig: () => get<AutomationConfigView>(\"/api/automation/config\"),",
+      "types": []
+    },
+    {
+      "name": "setAutomationConfig",
+      "usage": "setAutomationConfig: (patch: AutomationConfigPatch) =>\n    send<AutomationConfigView>(\"/api/automation/config\", \"PUT\", patch),",
+      "types": [
+        "AutomationConfigPatch"
+      ]
+    },
+    {
+      "name": "automationSchedules",
+      "usage": "automationSchedules: (projectId: string) =>\n    get<AutomationScheduleDiscoveryResponse>(\n      `/api/automation/config/schedules?projectId=${encodeURIComponent(projectId)}`,\n    ),",
+      "types": []
+    },
+    {
+      "name": "syncAutomation",
+      "usage": "syncAutomation: () =>\n    send<TaskRunStartedView>(\"/api/automation/sync\", \"POST\", {}),",
+      "types": []
+    },
+    {
+      "name": "dashboards",
+      "usage": "dashboards: () => get<DashboardListView>(\"/api/dashboards\"),",
+      "types": []
+    },
+    {
+      "name": "dashboard",
+      "usage": "dashboard: (id: string) => get<DashboardDetail>(`/api/dashboards/${encodeURIComponent(id)}`),",
+      "types": []
+    },
+    {
+      "name": "dashboardDatasets",
+      "usage": "dashboardDatasets: () => get<DashboardDatasetList>(\"/api/dashboards/datasets\"),",
+      "types": []
+    },
+    {
+      "name": "dashboardQuery",
+      "usage": "dashboardQuery: (query: DashboardQuery, options?: ReadOptions) =>\n    request<DashboardQueryResult>(\"/api/dashboards/query\", { method: \"POST\", body: query, ...options }),",
+      "types": [
+        "DashboardQuery",
+        "ReadOptions"
+      ]
+    },
+    {
+      "name": "createDashboard",
+      "usage": "createDashboard: (spec: DashboardSpecInput) =>\n    send<DashboardDetail>(\"/api/dashboards\", \"POST\", spec),",
+      "types": [
+        "DashboardSpecInput"
+      ]
+    },
+    {
+      "name": "updateDashboard",
+      "usage": "updateDashboard: (\n    id: string,\n    patch: { name?: string; description?: string | null; widgets?: DashboardDetail[\"widgets\"] },\n  ) => send<DashboardDetail>(`/api/dashboards/${encodeURIComponent(id)}`, \"PUT\", patch),",
+      "types": [
+        "DashboardDetail"
+      ]
+    },
+    {
+      "name": "deleteDashboard",
+      "usage": "deleteDashboard: (id: string) =>\n    send<{ ok: boolean }>(`/api/dashboards/${encodeURIComponent(id)}`, \"DELETE\"),",
+      "types": []
+    }
+  ],
+  "types": {
+    "RunStatus": "export type RunStatus = \"running\" | \"success\" | \"failure\" | \"cancelled\";",
+    "AdminRoleInput": "export interface AdminRoleInput {\n  name: string;\n  description?: string;\n  permissions: AppPermission[];\n}",
+    "FeedbackType": "export type FeedbackType = \"bug\" | \"feature\" | \"general\" | \"security\";",
+    "AdminUserCreate": "export interface AdminUserCreate {\n  name: string;\n  email: string;\n  roleId: string;\n}",
+    "AdminUserPatch": "export interface AdminUserPatch {\n  name: string;\n  email: string;\n  roleId: string;\n}",
+    "Visibility": "export type Visibility = \"public\" | \"private\";",
+    "Trigger": "export type Trigger =\n  | { type: \"cron\"; expression: string; timezone?: string; startAt?: string }\n  | { type: \"once\"; at: string; timezone?: string }\n  | { type: \"manual\" };",
+    "SchedulePatch": "export interface SchedulePatch {\n  enabled?: boolean;\n  trigger?: Trigger;\n  maxItemsPerRun?: number;\n  params?: unknown;\n}\n\n/** A Jira ticket as the header's search box shows it — enough to recognise, not to render. */",
+    "GraphNodeKind": "export type GraphNodeKind = \"ticket\" | \"loop\" | \"job\" | \"run\" | \"mr\" | \"action\";\n\n/**\n * Operational state, in the vocabulary `design.md` gives colour: running is coral,\n * success cyan, waiting gold, failure and dead dusty red. Wider than `RunStatus`\n * because a queued job and a dead one are both things a run never is.\n */",
+    "GraphStatus": "export type GraphStatus = \"running\" | \"success\" | \"failure\" | \"waiting\" | \"dead\" | \"idle\";\n\n/**\n * A ticket's own facts, as Jira reports them.\n *\n * Carried on the `ticket` node rather than fetched per click: the panel opens on\n * the first frame that way, and the graph has already paid for one Jira search.\n * Every field is optional because a Jira site can hide or rename any of them.\n */",
+    "TicketFactsView": "export interface TicketFactsView {\n  /** Stable Jira workflow status id; unlike the display name it is what board columns map. */\n  statusId?: string;\n  status?: string;\n  /** `new`, `indeterminate` or `done` — portable, unlike a translated status name. */\n  statusCategory?: string;\n  type?: string;\n  priority?: string;\n  labels: string[];\n  assignee?: TicketPersonView;\n  reporter?: string;\n  createdAt?: string;\n  updatedAt?: string;\n  /** The sprint this ticket is in, absent for a backlog one. See `SprintView`. */\n  sprint?: SprintView;\n  /** This ticket's parent key — set on a subtask, or a story under an epic. */\n  parentKey?: string;\n}\n\n/**\n * One Jira sprint, as the graph's filter bar needs it.\n *\n * The dates are here because the sprint switcher shows them: \"which sprint is\n * current\" is a question the server answers (`TicketGraphView.currentSprintId`),\n * but \"how much of it is left\" is one the client draws, and both come off the same\n * object rather than a second read.\n */",
+    "SprintView": "export interface SprintView {\n  id: number;\n  name: string;\n  state: \"active\" | \"future\" | \"closed\" | \"unknown\";\n  startDate?: string;\n  endDate?: string;\n  boardId?: number;\n}",
+    "GraphNode": "export interface GraphNode {\n  /** Stable across polls, so the canvas does not re-mount nodes: `job:<id>`, `run:<executionId>`. */\n  id: string;\n  kind: GraphNodeKind;\n  /** Short identity: `TP-1204`, `!412`, a loop name. */\n  label: string;\n  sublabel?: string;\n  status: GraphStatus;\n  /** Outward deep link — the Jira browse URL or the merge request's `web_url`. */\n  url?: string;\n  /** Present on loop/job/run nodes, so a click can reach the existing task page. */\n  taskId?: string;\n  /** Present on run nodes, for `GET /api/task-runs/:executionId/steps`. */\n  executionId?: string;\n  /** Job facts inlined so the side panel needs no second request; `jobs` has no route. */\n  job?: { attempts: number; maxAttempts: number; error?: string; enqueuedAt: string };\n  /**\n   * The queue row behind this node, when it is still queued or leased — what\n   * `POST /api/jobs/:id/cancel` needs.\n   *\n   * Present on more than `job` nodes: a manual action carries no work subject, so\n   * the only thing on the canvas that stands for it is the merge request or\n   * ticket node it was marked running on. Absent once the job finishes, because\n   * there is then nothing to cancel.\n   */\n  jobId?: string;\n  /**\n   * When this job/run actually happened — finished, else started, else\n   * enqueued. `nodes` itself is sorted by `id` (a random UUID) for stable\n   * canvas layout, not by time, so a chronological list (the ticket's\n   * Activity tab) has to re-sort by this instead.\n   */\n  at?: string;\n  /**\n   * The work subject an `mr` node stands for, when it came from one. Together with\n   * `taskId` (the discovering loop) it is everything `POST /api/graph/mr-action`\n   * needs. Absent on a merge request recovered from a run's `details`, which has\n   * no subject row behind it — such a node can be read but not acted on.\n   */\n  subjectKey?: string;\n  /**\n   * The merge request itself, on every `mr` node whose project and number could be\n   * recovered. What makes a node with no `subjectKey` actionable anyway: the client\n   * falls back to `POST /api/pull-requests/:id/actions`, which authorises the same\n   * three actions against the forge with the developer's own token. So an MR read\n   * from their own listing offers the same toolbar as one a loop is tracking.\n   */\n  pullRequest?: { projectId: string; mrIid: number };\n  /** Completed QA browser-test result carried by an `e2e-test` action node. */\n  e2e?: E2eTestResultView;\n  /** Set on `ticket` nodes. See `TicketFactsView`. */\n  ticket?: TicketFactsView;\n}",
+    "MrActionRequest": "export interface MrActionRequest {\n  /** The loop that discovered the merge request — `GraphNode.taskId`. */\n  loopId: string;\n  subjectKey: string;\n  action: MrActionId;\n}\n\n/**\n * What a ticket node's Actions menu can start.\n *\n * `fix-issue` writes code — a branch and a draft merge request. `review-description`\n * writes nothing but a Jira comment: it reads the ticket the way a developer picking\n * it up would and asks, in the ticket's own thread, about the requirements that are\n * missing or ambiguous. `plan-issue` sits between them: it reads the ticket *and* the\n * code and writes an implementation plan, which changes nothing until a human\n * approves it, and approving it is what starts a fix. `e2e-test` selects an\n * already-linked merge request and verifies it against QA. They are listed together\n * because they are the same decision — \"what should talos do with this ticket\" —\n * taken at different points in its life: the review is what you want before anybody\n * starts, the plan is what you want when you would rather argue about the approach\n * than about a diff, and the fix is what you want once neither is in doubt.\n */",
+    "TicketActionId": "export type TicketActionId =\n  | \"fix-issue\"\n  | \"plan-issue\"\n  | \"review-description\"\n  | \"e2e-test\";",
+    "E2eTestArtifactView": "export interface E2eTestArtifactView {\n  name: string;\n  kind: \"screenshot\" | \"trace\" | \"log\";\n  contentType: string;\n  bytes: number;\n  url: string;\n}",
+    "E2eTestResultView": "export interface E2eTestResultView {\n  /** Queue job that produced this result; identifies it for test-MR export. */\n  jobId: string;\n  /** True when this run has conclusive structured steps in the supported target repository. */\n  exportable: boolean;\n  sourceBranch?: string;\n  targetBranch?: string;\n  verdict: \"pass\" | \"fail\" | \"inconclusive\";\n  summary: string;\n  scenarios: Array<{\n    name: string;\n    outcome: \"pass\" | \"fail\" | \"blocked\";\n    detail: string;\n    evidence: string[];\n    automation?: {\n      portal: \"main\" | \"parent\" | \"student\";\n      preconditions: string[];\n      steps: Array<{\n        action: \"navigate\" | \"click\" | \"fill\" | \"select\" | \"check\" | \"press\" | \"assert\" | \"wait\";\n        target: string;\n        locatorHint?: string;\n        value?: string;\n        expected?: string;\n      }>;\n    };\n  }>;\n  findings: Array<{\n    severity: \"critical\" | \"major\" | \"minor\";\n    title: string;\n    detail: string;\n    evidence: string[];\n  }>;\n  artifacts: E2eTestArtifactView[];\n  testMr?: {\n    status: \"queued\" | \"running\" | \"opened\" | \"no-change\" | \"dead\";\n    jobId: string;\n    mrUrl?: string;\n    draft?: boolean;\n    error?: string;\n  };\n}\n\n/** POST `/api/e2e/test-mr` — export one completed exploratory run as Playwright coverage. */",
+    "E2eTestMrRequest": "export interface E2eTestMrRequest {\n  sourceJobId: string;\n  /** Server-restricted to `develop` or the tested MR's source branch. */\n  targetBranch: string;\n}\n\n/** POST body for `/api/graph/ticket-action`. */",
+    "TicketActionRequest": "export interface TicketActionRequest {\n  issueKey: string;\n  action: TicketActionId;\n  /** Per-run override for fix/plan; omitted callers use the developer's saved default. */\n  targetBranch?: string;\n  /** Required for `e2e-test`; selected from this ticket's linked merge requests. */\n  pullRequest?: { projectId: string; mrIid: number };\n}\n\n/**\n * POST body for the older `/api/graph/fix-issue`, kept as an alias of\n * `{ action: \"fix-issue\" }` for scripts that already call it.\n */",
+    "PlanDecisionRequest": "export interface PlanDecisionRequest {\n  decision: \"approve\" | \"reject\";\n  /** Required for `approve`: the plan text as the reviewer is approving it. */\n  body?: string;\n  /** Optional for `reject`: what was wrong with it. */\n  note?: string;\n}",
+    "TicketGraphView": "export interface TicketGraphView {\n  clusters: TicketCluster[];\n  /** Total matching clusters before this bounded page was selected. */\n  total: number;\n  offset: number;\n  limit: number;\n  /** True while any cluster holds a running run or an active job. Drives the client's poll. */\n  live: boolean;\n  /**\n   * What the graph could not read — an unconfigured Jira token, a forge that\n   * refused. Reported rather than thrown: a partial graph with an explanation is\n   * more use than a red box, and a silently short one hides the outage.\n   */\n  warnings: string[];\n  /** Jira's actual board and status-to-column mapping. */\n  board?: TicketBoardView;\n  /**\n   * Every sprint the clusters mention, once each, ordered the way the switcher\n   * walks them: active first, then future by start date, then closed most recent\n   * first.\n   *\n   * Derived from the tickets rather than read from the board on purpose — it is\n   * \"the sprints your work is in\", so the list costs no extra Jira call and can\n   * never offer a sprint that would filter the page down to nothing. Empty on a\n   * site with no sprint field, which is how the client knows to hide the switcher\n   * rather than show one with a single choice.\n   */\n  sprints: SprintView[];\n  /**\n   * The sprint the page opens on: the active one your work is in. Decided here so\n   * \"current sprint\" means one thing across clients, and so the client's stored\n   * preference can say `current` rather than pinning an id that goes stale the\n   * moment the sprint rolls over.\n   */\n  currentSprintId?: number;\n  /** Null until the developer sets it; the fix action is refused without it. */\n  fixDefaults: FixIssueDefaultsView | null;\n  generatedAt: string;\n}",
+    "TicketPersonView": "export interface TicketPersonView {\n  /** Stable Jira identity; display names are not unique. */\n  accountId?: string;\n  name: string;\n  email?: string;\n  /** Jira's own 24px avatar, already a full URL. Absent for a deleted account. */\n  avatarUrl?: string;\n}\n\n/**\n * Another ticket this one points at: a parent, a subtask, or either end of a link.\n *\n * `relation` is the phrasing from *this* ticket's side — Jira gives both readings\n * of a link type and which one applies depends on which end you are standing at.\n */",
+    "FixIssueDefaultsView": "export interface FixIssueDefaultsView {\n  /** A GitLab project — numeric id or `group/project`. */\n  projectId: string;\n  targetBranch: string;\n}\n\n/**\n * Every preference this developer has set — `GET /api/me/preferences`.\n *\n * Values are whatever JSON the owning page put there, typed as `unknown` because\n * that is the truth: a row written by last month's release outlives the code that\n * wrote it, so the page reading a key is the only thing that can say whether the\n * value still makes sense. Each reader parses defensively and falls back to its own\n * defaults — see the client's `usePreference`.\n *\n * One request for all of them rather than one per key: they are read once at boot to\n * decide what the first paint shows, and five round trips to draw one screen is the\n * shape that makes people put things back in localStorage.\n */",
+    "CreateTaskInstance": "export interface CreateTaskInstance {\n  definitionId: string;\n  name: string;\n  description?: string;\n  params?: unknown;\n  visibility?: Visibility;\n  schedule?: Omit<SchedulePatch, \"params\">;\n  promptTemplate?: string;\n}",
+    "UpdateTaskInstance": "export interface UpdateTaskInstance {\n  name?: string;\n  description?: string | null;\n  promptTemplate?: string | null;\n}\n\n/**\n * DELETE `/api/tasks/:id`. The id is echoed back so the caller can evict the\n * right cache entry from the response alone.\n */",
+    "PullRequestScope": "export type PullRequestScope = \"mine\" | \"team\";",
+    "PullRequestState": "export type PullRequestState = \"open\" | \"draft\" | \"merged\" | \"closed\";\n\n/** One open pull/merge request, forge-neutral — see `application/pull-requests.ts`. */",
+    "PullRequestActionId": "export type PullRequestActionId =\n  | \"resolve-conflicts\"\n  | \"address-comments\"\n  | \"code-review\"\n  | \"revise\";\n\n/**\n * The graph canvas exposes only the one-click actions. Free-form revision turns\n * live on the pull-request conversation tab, where an instruction can be entered.\n */",
+    "MrActionId": "export type MrActionId = Exclude<PullRequestActionId, \"revise\">;\n\n/**\n * `idle` means nothing has been asked for yet — distinct from `done`, which the\n * UI reports. `running` covers a leased job; `failed` a dead one.\n */",
+    "NotificationSubscriptionPatch": "export interface NotificationSubscriptionPatch {\n  kind: string;\n  subscribed: boolean;\n}\n\n/**\n * PUT `/api/me/notification-subscriptions` — the whole set, not a delta.\n *\n * The screen has a Save button, so what it holds when you press it is the answer:\n * sending the complete state makes the write idempotent and rules out the half-saved\n * outcome a per-toggle request has when the third of five calls fails. Kinds left\n * out are untouched, which is what keeps an older client from silently\n * re-subscribing you to a kind it has never heard of.\n */",
+    "NotificationSubscriptionsPatch": "export interface NotificationSubscriptionsPatch {\n  subscriptions: NotificationSubscriptionPatch[];\n}\n\n/**\n * GET `/api/me/profile` — the signed-in developer's own account.\n *\n * Always the asker's own row, for the reason `/api/me/preferences` gives: a route\n * that takes a user id is a route somebody eventually reads somebody else's\n * account through.\n */",
+    "ProfilePatch": "export interface ProfilePatch {\n  name: string;\n}\n\n/** DELETE `/api/me/profile` — password re-entry, because this cannot be undone. */",
+    "LogLevel": "export type LogLevel = (typeof LOG_LEVELS)[number];",
+    "LlmModel": "export type LlmModel = (typeof LLM_MODELS)[number];\n\n/**\n * The version each alias currently tracks, shown next to the alias in Settings so\n * an operator can tell at a glance which generation a run will use.\n *\n * Advisory, not authoritative: the alias is what reaches `claude --model`, and the\n * Claude Code inside the agent image is what resolves it — an image built before a\n * release still resolves `sonnet` to the older snapshot. The run log's\n * `claude started (<model>)` line is the ground truth for a given run.\n */",
+    "LlmEffort": "export type LlmEffort = (typeof LLM_EFFORTS)[number];",
+    "AgentRunPreferencesView": "export interface AgentRunPreferencesView {\n  model: LlmModel | null;\n  effort: LlmEffort | null;\n}",
+    "AgentRunPreferencesPatch": "export type AgentRunPreferencesPatch = AgentRunPreferencesView;",
+    "GeneralSettingsPatch": "export interface GeneralSettingsPatch {\n  logLevel?: LogLevel | null;\n  timezone?: string | null;\n  llm?: {\n    provider?: string | null;\n    model?: string | null;\n    effort?: string | null;\n    maxTokens?: number | null;\n  };\n}\n\n/** One overridable LLM prompt template — a full prompt an agent task builds. */",
+    "PromptsPatch": "export type PromptsPatch = Record<string, string | null>;\n\n/**\n * GET `/api/settings/e2e-tests` — instance-wide inputs used by ticket E2E jobs.\n *\n * Null file overrides mean that the runner fetches the documented file from the\n * Test-Automation repository at run time. Additional instructions are owned by\n * Talos and are mounted as a separate, non-safety-critical context file.\n */",
+    "E2eTestSettingsPatch": "export interface E2eTestSettingsPatch {\n  agentInstructionsOverride?: string | null;\n  runtimeConfigOverride?: string | null;\n  additionalInstructions?: string | null;\n}",
+    "AutomationConfigPatch": "export interface AutomationConfigPatch {\n  projectId: string;\n  schedules: Array<{\n    scheduleId: number;\n    displayName?: string | null;\n    autoRetry?: {\n      enabled?: boolean;\n      maxJobsPerPipeline?: number;\n    };\n  }>;\n  /** Null or omitted keeps Automation reporting usable without Jira ticketing. */\n  jira?: {\n    projectKey: string;\n    parentKey?: string | null;\n    issueType?: string | null;\n    boardId?: number | null;\n    useActiveSprint?: boolean;\n    labels?: string[];\n    assigneeMode?: \"automatic\" | \"fixed\";\n    /** Jira account id or email. Required when assigneeMode is fixed. */\n    fixedAssignee?: string | null;\n  } | null;\n}\n\n/** One schedule returned by GitLab for the Automation settings picker. */",
+    "AutomationFailureAssignmentPatch": "export interface AutomationFailureAssignmentPatch {\n  userId: string | null;\n}",
+    "AutomationTicketActionPatch": "export interface AutomationTicketActionPatch {\n  summary: string;\n  description: string;\n  parentKey: string | null;\n}",
+    "AutomationBulkTicketActionPatch": "export interface AutomationBulkTicketActionPatch {\n  /** Failure clusters to include together in one pipeline-scoped Jira ticket. */\n  signatureKeys: string[];\n}",
+    "ManifestSection": "export type ManifestSection = \"applications\" | \"services\";\n\n/** One entry in an environment's `cluster.yaml` and the version it runs. */",
+    "ServiceVersionView": "export interface ServiceVersionView {\n  name: string;\n  version: string;\n  /** The container image, when the entry names one distinct from `name`. */\n  image?: string;\n  section: ManifestSection;\n}\n\n/**\n * One environment (a folder in the releases repo) and the entries of its\n * `cluster.yaml`, across both the `applications` and `services` sections.\n */",
+    "EnvironmentVersionView": "export interface EnvironmentVersionView {\n  name: string;\n  services: ServiceVersionView[];\n}\n\n/**\n * GET `/api/releases` — the current version of every service in every\n * environment, read from the per-environment `cluster.yaml` files (one per\n * top-level folder) in the configured releases repo.\n *\n * Never a hard error: when releases are unconfigured or GitLab is not connected\n * this comes back with `configured:false`/`error` so the page can guide setup,\n * the same \"explain the gap\" stance the pull request page takes.\n */",
+    "ReleaseUploadRequest": "export interface ReleaseUploadRequest {\n  environment: string;\n  changes: { service: string; version: string; section: ManifestSection }[];\n  title?: string;\n  description?: string;\n  /**\n   * Announce the release in the team's Slack channel once the MR is open. The\n   * dialog's toggle defaults to on, but an omitted flag here means no message:\n   * posting to a channel should take an explicit ask.\n   */\n  notifySlack?: boolean;\n}\n\n/** The merge request `/api/releases/upload` opened (or reused). */",
+    "ReleaseRevertRequest": "export interface ReleaseRevertRequest {\n  environment: string;\n  /** Guards confirmation against a newer deployment landing while the dialog is open. */\n  sha: string;\n  notifySlack?: boolean;\n}\n\n/**\n * GET `/api/releases/history` — recent deployments across every environment,\n * newest first, read from the releases repo's own commit history.\n *\n * Same \"explain the gap\" stance as `/api/releases`: unconfigured or a missing\n * GitLab token comes back `configured:false` with an `error` to render, not a 4xx.\n */",
+    "ReleaseConfigPatch": "export interface ReleaseConfigPatch {\n  projectId: string;\n  manifestPath: string;\n  targetBranch: string;\n}",
+    "ReleaseDeploymentStatusRequest": "export interface ReleaseDeploymentStatusRequest {\n  environments: EnvironmentVersionView[];\n}",
+    "IntegrationFieldState": "export interface IntegrationFieldState {\n  /** The secret name, matching an entry in `INTEGRATIONS`. */\n  name: string;\n  /**\n   * Which layer supplies the effective value: the stored override, `config/.env`\n   * behind it, or nothing at all. This is the answer to \"I saved a token and it\n   * still 401s\" — an override that is present says so plainly.\n   */\n  origin: \"override\" | \"environment\" | \"unset\";\n  /** The value, for non-secret fields with an override. Always null for a secret. */\n  value: string | null;\n  /** When the override was last saved. Null when there is none. */\n  updatedAt: string | null;\n  /** Stored but undecryptable, so not in effect — TALOS_SECRET_KEY changed. */\n  unreadable?: boolean;\n}",
+    "IntegrationsPatch": "export interface IntegrationsPatch {\n  overrides: Record<string, string | null>;\n}\n\n/**\n * One per-user credential's state — never its secret value.\n *\n * The `IntegrationFieldState` of the other surface, and deliberately a separate\n * type: `origin` answers a different question here. On the settings page it is\n * \"which layer configured the instance\"; here it is \"does my work run as me\", to\n * which only `\"user\"` is a yes — the UI treats a shared value as missing, since an\n * instance token is not an identity this developer can be attributed to.\n */",
+    "ProviderAccessPatch": "export interface ProviderAccessPatch {\n  credentials: Record<string, string | null>;\n}",
+    "SlackConversationDetailsPatch": "export interface SlackConversationDetailsPatch {\n  name?: string;\n  topic?: string;\n}",
+    "SlackConversationSearchFilters": "export interface SlackConversationSearchFilters {\n  fromMe?: boolean;\n  includesMe?: boolean;\n  hasLink?: boolean;\n  threadsOnly?: boolean;\n}",
+    "SlackDirectMessageRequest": "export interface SlackDirectMessageRequest {\n  userId: string;\n}",
+    "SlackChannelSelectionPatch": "export interface SlackChannelSelectionPatch {\n  channelIds: string[];\n}",
+    "SlackReadPatch": "export interface SlackReadPatch {\n  conversationId: string;\n  timestamp: string;\n}",
+    "SlackMessageSendRequest": "export interface SlackMessageSendRequest {\n  text: string;\n  threadTs?: string;\n}",
+    "SlackMessageUpdateRequest": "export interface SlackMessageUpdateRequest {\n  text: string;\n}",
+    "SlackReactionPatch": "export interface SlackReactionPatch {\n  name: string;\n  active: boolean;\n}",
+    "RegressionTestRequest": "export interface RegressionTestRequest {\n  targetBranch?: string;\n}\n\n/** POST `/api/logrocket/issues/:id/fix` — file a ticket, then queue the fix. */",
+    "LogRocketStatePatch": "export interface LogRocketStatePatch {\n  state: \"open\" | \"dismissed\";\n}",
+    "DatadogAreaView": "export type DatadogAreaView =\n  | \"frontend\"\n  | \"backend\"\n  | \"infrastructure\"\n  | \"data\"\n  | \"unknown\";\n\n/**\n * One row of the Datadog page: a cluster of error logs that share a shape.\n *\n * Not a Datadog object. Datadog Error Tracking is not indexing this org, so an\n * \"issue\" here is ours: the logs from one service whose messages normalise to the\n * same `signature`. That is why the counts are two numbers rather than one —\n * `eventCount` is an estimate and `sampleCount`/`sampleSize` are the fraction it\n * was extrapolated from, and a page that showed only the first would be claiming a\n * precision the scan does not have.\n */",
+    "FlakySpecStatePatch": "export interface FlakySpecStatePatch {\n  project: string;\n  specFile: string;\n  state: \"open\" | \"dismissed\";\n}\n\n/**\n * POST `/api/flaky-specs/file` — file a ticket for a held spec after all.\n *\n * Marks the spec rather than calling Jira from the request: the ticket a reader\n * wants is the one the loop builds, with the pipeline, the trace excerpt and the\n * label the \"already filed?\" check depends on, and none of that is in this\n * process. So the override is recorded and the next run of the loop honours it —\n * which also means one code path files every ticket this tool has ever filed.\n */",
+    "DatadogStatePatch": "export interface DatadogStatePatch {\n  state: \"open\" | \"dismissed\";\n}\n\n/**\n * POST `/api/datadog/scan` — run the scan now.\n *\n * Synchronous, unlike a task rerun: a scan is a minute of aggregation calls, and\n * the page has nothing to show until it finishes. `started: false` carries the\n * refusal instead.\n */",
+    "DatadogRoutingRuleView": "export interface DatadogRoutingRuleView {\n  id: string;\n  /** Lower runs first. First match wins. */\n  priority: number;\n  facet: \"service\" | \"source\" | \"kube_namespace\" | \"env\" | \"host\" | \"signature\";\n  /** Glob against the facet's value — `csi-*`, `argocd*`. Case-insensitive. */\n  pattern: string;\n  action: \"route\" | \"ignore\";\n  team: string | null;\n  area: DatadogAreaView | null;\n  /** Overrides the default Jira project for issues this rule routes. */\n  jiraProject: string | null;\n  note: string | null;\n  updatedAt: string;\n}\n\n/** GET `/api/datadog/routing`. */",
+    "DatadogRoutingRulePatch": "export interface DatadogRoutingRulePatch {\n  priority?: number;\n  facet?: DatadogRoutingRuleView[\"facet\"];\n  pattern?: string;\n  action?: \"route\" | \"ignore\";\n  team?: string | null;\n  area?: DatadogAreaView | null;\n  jiraProject?: string | null;\n  note?: string | null;\n}\n\n/** Team-owned repository configuration for one exact Datadog service name. */",
+    "DatadogServiceTargetPatch": "export interface DatadogServiceTargetPatch {\n  projectId: string;\n  targetBranch: string;\n}\n\n/** GET `/api/datadog/service-targets`. */",
+    "FeedbackRequest": "export interface FeedbackRequest {\n  type: FeedbackType;\n  title: string;\n  description: string;\n}\n\n/** Response for `POST /api/feedback`, from the footer's feedback link. */",
+    "AssistantMessageRole": "export type AssistantMessageRole = \"user\" | \"assistant\";",
+    "AssistantMessage": "export interface AssistantMessage {\n  role: AssistantMessageRole;\n  content: string;\n}\n\n/** POST body for the streamed `/api/assistant/chat` endpoint. */",
+    "AgentUsageFilter": "export interface AgentUsageFilter {\n  days: 7 | 30 | 90 | 365;\n  /** Global usage is accepted only for the built-in administrator role. */\n  scope?: \"all\";\n  account?: string;\n  source?: \"task\" | \"assistant\" | \"e2e\";\n  limit: number;\n  offset: number;\n}",
+    "ReadOptions": "export interface ReadOptions {\n  signal?: AbortSignal;\n  bypassCache?: boolean;\n}",
+    "ReleaseHistoryReadOptions": "export interface ReleaseHistoryReadOptions extends ReadOptions {\n  environment?: string;\n  /** ISO instant used as GitLab's inclusive lower bound. */\n  since?: string;\n}",
+    "LogRocketIssuesFilter": "export interface LogRocketIssuesFilter {\n  includeDismissed?: boolean;\n}",
+    "DatadogIssuesFilter": "export interface DatadogIssuesFilter {\n  includeDismissed?: boolean;\n  team?: string;\n  area?: DatadogAreaView;\n}",
+    "FlakySpecsFilter": "export interface FlakySpecsFilter {\n  includeDismissed?: boolean;\n  project?: string;\n}",
+    "AutomationDashboardFilter": "export interface AutomationDashboardFilter {\n  days: 1 | 7 | 30;\n  scheduleId?: number;\n  status?: string;\n  limit?: number;\n  offset?: number;\n}",
+    "AutomationFailureClusterFilter": "export interface AutomationFailureClusterFilter {\n  limit: 25 | 50;\n  offset: number;\n  search?: string;\n  jobId?: number;\n  suiteIndex?: number;\n  state?: \"untriaged\" | \"ticketed\" | \"active-mr\";\n}",
+    "AutomationFailureInboxFilter": "export interface AutomationFailureInboxFilter {\n  days: 1 | 7 | 30;\n  scheduleId?: number;\n  pipelineId?: number;\n  presence: \"current\" | \"recent\";\n  state?: \"untriaged\" | \"ticketed\" | \"active-mr\";\n  search?: string;\n  limit: 25 | 50;\n  offset: number;\n}\n\n/** `?a=b` including the leading `?`, or `\"\"` — never a bare `?`. */",
+    "DashboardDetail": "export interface DashboardDetail {\n  id: string;\n  ownerUserId: string;\n  name: string;\n  description?: string;\n  version: 1;\n  widgets: import(\"../../shared/dashboard.ts\").Widget[];\n  createdAt: string;\n  updatedAt: string;\n}",
+    "DashboardQuery": "export type DashboardQuery = import(\"../../shared/dashboard.ts\").DashboardQuery;",
+    "DashboardSpecInput": "export type DashboardSpecInput = import(\"../../shared/dashboard.ts\").DashboardSpec;"
+  }
+}

@@ -1,0 +1,22 @@
+# Talos configuration.
+#
+# Copy to config/workflows.yaml and edit. Secrets never belong in this file —
+# they come from the environment or .env. See config/example.env.
+#
+# This file is bootstrap-only. Task schedules and params live in SQLite and are
+# edited through task creation and scheduling in the web UI.
+# A legacy `workflows:` block is accepted only for a one-time SQLite import.
+
+# Relative paths resolve against this file's directory, so ../data is the
+# repository-root data/ folder.
+database: ../data/talos.db
+logLevel: info
+
+# Applies to cron triggers that do not set their own. Defaults to system local.
+# timezone: Europe/Berlin
+
+llm:
+  provider: anthropic
+  # model: sonnet   # haiku | sonnet | opus | fable — used by gitlab-code-review
+  # effort: high    # low | medium | high | xhigh | max
+  maxTokens: 2048
