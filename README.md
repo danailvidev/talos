@@ -1,10 +1,32 @@
 # Talos
 
-Self-hosted web application for scheduled automation across GitLab, Jira,
-Azure DevOps, Slack, Datadog, and LogRocket, with optional LLM reasoning.
+<p align="center">
+  <img alt="Talos" src="rebranding/TALOS_Brand_Assets/TALOS_Brand_Kit/assets/logos/talos-social-preview-1200x630.png" width="720">
+</p>
 
-Talos is currently supported through its web UI and JSON API only. The
-former Talos command-line interface has been removed.
+Talos is a home for the work of shipping software. Tickets, code reviews, releases, and production issues sit on one screen, and a person still decides what goes out.
+
+<p align="center">
+  <a href="rebranding/talos-sentinel-assembly-refined.mp4">
+    <img alt="The Talos mark. Select it to play the film." src="rebranding/rmark-a22f9a58-d9c2-42aa-9109-d16ab76783d3.png" width="280">
+  </a>
+  <br>
+  <a href="rebranding/talos-sentinel-assembly-refined.mp4"><strong>Play the film</strong></a>
+</p>
+
+## What you can do here
+
+- See the tickets your team is working on, and ask for a plan or a fix from the ticket.
+- Follow a code change through review, and see when it is ready.
+- Ship a version, then watch whether the rollout landed.
+- Read test results and production errors next to the work they belong to.
+- Keep Slack, dashboards, and the rest of the day's checks in the same place.
+
+The pictures above are the Talos mark and the short assembly film from `rebranding/`.
+
+## Running Talos
+
+Talos is a self-hosted web application. People use it in the browser. There is also a JSON API.
 
 ## Requirements
 
