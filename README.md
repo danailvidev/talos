@@ -154,13 +154,7 @@ The convention is:
   container image;
 - release version tags are immutable.
 
-For in-cluster access, apply the `ClusterRole` in
-`config/kubernetes-release-verifier-rbac.yaml` once, then apply a copy of its
-`RoleBinding` in every release namespace after setting the Talos
-ServiceAccount name and namespace. Do not use a `ClusterRoleBinding`: namespace
-RoleBindings keep access limited to environments Talos is allowed to inspect.
-For host kubeconfig access, grant that kubeconfig identity equivalent `get` and
-`list` access. The verifier only reads Deployments, ReplicaSets, and Pods.
+The identity Talos uses needs `get` and `list` on Deployments, ReplicaSets, and Pods in the namespaces it checks. It does not need permission to change them.
 
 A release is shown as released only after Kubernetes has observed the current
 Deployment generation, all desired replicas are updated, ready, and available,
@@ -171,48 +165,6 @@ Kubernetes API failures remain visible as unavailable and are never treated as
 successful releases. This live status is independent from the existing
 production post-deploy watch: it adds no jobs, state transitions, or database
 records.
-
-## EKS deployment
-
-Production deployment assets live under `deploy/`:
-
-- `deploy/helm/talos` owns Talos application resources, executor RBAC, the EBS
-  PVC, quotas, and optional network policies.
-- `deploy/argocd` defines the Git-tracked Argo CD Application.
-- `deploy/ansible` bootstraps AWS/EKS prerequisites and registers that
-  Application. It does not apply the Talos Deployment directly.
-
-Follow [`deploy/PRODUCTION-RUNBOOK.md`](deploy/PRODUCTION-RUNBOOK.md) for image
-attestation, External Secrets, state migration, NetworkPolicy rollout, backup,
-restore, and the production go/no-go checklist.
-
-Build the three images with `make images`. EKS values must use immutable
-`@sha256:` ECR references. Configure `TALOS_EXECUTOR=kubernetes`,
-`TALOS_PUBLIC_URL=https://...`, the worker image digests, and the S3 artifact
-bucket. The worker ServiceAccount has no Kubernetes API token; only the control
-plane can create and inspect Jobs and their short-lived input Secrets.
-
-Keep `TALOS_SECRET_KEY` in the existing Secret/External Secret and back it up
-with the SQLite database. Losing it makes stored credentials unreadable. The
-chart deliberately uses one `Recreate` replica and an EBS `ReadWriteOnce` PVC.
-Take an EBS snapshot before upgrades and periodically test restore into an
-isolated namespace.
-
-Argo CD performs rollouts from Git. Upgrade by committing new image digests;
-roll back by reverting that Git revision and syncing the Application. Configure
-S3 lifecycle expiry as a second guard behind application retention. Alert on
-control-plane restarts/readiness failures, Pending or failed worker Jobs, and
-PVC pressure.
-
-The EKS VPC must have DNS and routing to the QA environment through the
-organization VPN, Transit Gateway, or Direct Connect. Docker's local
-`TALOS_E2E_NETWORK=host` option is not applicable to pods.
-
-After deployment, verify `/healthz` and `/readyz`, HTTPS login and callbacks,
-SQLite persistence after pod replacement, one agent Job, one E2E Job and its S3
-evidence, cancellation cleanup, then an Argo CD rollback. GitLab CI image
-publishing and OIDC digest-update automation are intentionally deferred until
-the repository migration.
 
 ## Quality checks
 

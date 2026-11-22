@@ -133,6 +133,6 @@ Access, credentials, and agent runs are kept apart. This is the control model, n
 
 ## Where it runs
 
-Talos is hosted by the team. Locally, agent and QA jobs run in Docker. In production it runs as a single instance on EKS, and coding jobs run as Kubernetes Jobs. A reverse proxy terminates HTTPS. Integration credentials are stored encrypted with the database; losing that key makes them unreadable.
+Talos is hosted by the team. Locally, agent and QA jobs run in Docker. A reverse proxy terminates HTTPS when it is exposed beyond the host. Integration credentials are stored encrypted with the database; losing that key makes them unreadable.
 
-Setup, environment variables, and the production checklist are in [README.md](../README.md) and [deploy/PRODUCTION-RUNBOOK.md](../deploy/PRODUCTION-RUNBOOK.md).
+Setup and environment variables are in [README.md](../README.md).
