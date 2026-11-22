@@ -43,7 +43,7 @@ The implementation will preserve the existing semantic token boundary. Feature c
 - Most application surfaces consume semantic variables, so a light appearance can be implemented centrally.
 - `web/src/PreferencesContext.tsx` already persists preferences on the server and mirrors them to local storage.
 - The repository history contains the removed theme bootstrap, provider, and selector. Their behavior can be adapted to the TALOS tokens instead of designed from scratch.
-- Black, bronze, and white vector variants already exist under `rebranding/svg-new/`.
+- The black logo files used on light surfaces live in `brand/`.
 - `web/src/AssistantIcon.tsx` uses `currentColor`; it will follow the active semantic color automatically.
 
 ## Design decisions
@@ -210,7 +210,7 @@ The current `#B08C65` Bronze can remain a filled-control background with dark te
 
 ### Work
 
-1. Bundle these approved files directly from `rebranding/svg-new/`:
+1. Bundle these approved files directly from `brand/`:
    - `talos-logo-horizontal-black.svg`;
    - `talos-mark-black.svg`.
 2. Keep the existing bronze variants for dark surfaces.
@@ -222,8 +222,8 @@ The current `#B08C65` Bronze can remain a filled-control background with dark te
 
 ### Files
 
-- `rebranding/svg-new/talos-logo-horizontal-black.svg` — bundled by `Logo`
-- `rebranding/svg-new/talos-mark-black.svg` — bundled by `Logo`
+- `brand/talos-logo-horizontal-black.svg` — bundled by `Logo`
+- `brand/talos-mark-black.svg` — bundled by `Logo`
 - `web/src/Logo.tsx`
 - `web/src/AuthSplitCard.tsx`
 - `web/src/AssistantIcon.tsx` — verification only unless contrast requires a semantic class change

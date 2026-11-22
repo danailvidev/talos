@@ -1,17 +1,17 @@
 # Talos
 
 <p align="center">
-  <img alt="Talos" src="https://github.com/danailvidev/talos/raw/master/rebranding/TALOS_Brand_Assets/TALOS_Brand_Kit/assets/logos/talos-social-preview-1200x630.png" width="720">
+  <img alt="Talos" src="https://github.com/danailvidev/talos/raw/master/brand/talos-social-preview.png" width="720">
 </p>
 
 Talos is a home for the work of shipping software. Tickets, code reviews, releases, and production issues sit on one screen, and a person still decides what goes out.
 
 <p align="center">
-  <a href="https://github.com/danailvidev/talos/blob/master/rebranding/talos-sentinel-assembly-refined.mp4">
-    <img alt="Play the Talos film" src="https://github.com/danailvidev/talos/raw/master/rebranding/readme/talos-film-poster.png" width="640">
+  <a href="https://github.com/danailvidev/talos/blob/master/brand/talos-film.mp4">
+    <img alt="Play the Talos film" src="https://github.com/danailvidev/talos/raw/master/brand/talos-film-poster.png" width="640">
   </a>
   <br>
-  <a href="https://github.com/danailvidev/talos/blob/master/rebranding/talos-sentinel-assembly-refined.mp4"><strong>Play the film</strong></a>
+  <a href="https://github.com/danailvidev/talos/blob/master/brand/talos-film.mp4"><strong>Play the film</strong></a>
 </p>
 
 ## What you can do here
@@ -21,8 +21,6 @@ Talos is a home for the work of shipping software. Tickets, code reviews, releas
 - Ship a version, then watch whether the rollout landed.
 - Read test results and production errors next to the work they belong to.
 - Keep Slack, dashboards, and the rest of the day's checks in the same place.
-
-The pictures above are the Talos mark and the short assembly film from `rebranding/`.
 
 ## Running Talos
 

@@ -1,6 +1,6 @@
 import type { FormEvent, ReactNode } from "react";
 
-import primaryLogoUrl from "../../rebranding/TALOS_Brand_Assets/TALOS_Brand_Kit/assets/logos/talos-logo-primary.png";
+import primaryLogoUrl from "../../brand/talos-logo-primary.png";
 import { Logo } from "./Logo.tsx";
 import { Card, CardContent } from "./components/ui/card.tsx";
 import {

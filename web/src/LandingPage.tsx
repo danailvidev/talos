@@ -1,6 +1,6 @@
 import { useEffect } from "react";
 
-import sentinelVideoUrl from "../../rebranding/talos-sentinel-assembly.mp4";
+import sentinelVideoUrl from "../../brand/talos-film.mp4";
 import { Button } from "./components/ui/button.tsx";
 
 export function LandingPage({

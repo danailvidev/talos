@@ -1,7 +1,7 @@
 # TALOS Design System
 
-This repository implements the TALOS identity described in
-`rebranding/TALOS_Brand_Guidelines.pdf`. The existing application layout,
+This repository implements the TALOS identity. The logo files live in
+`brand/`. The existing application layout,
 navigation model, routes, and responsive behavior remain stable; this document
 governs visual identity, component treatment, accessibility, and voice.
 

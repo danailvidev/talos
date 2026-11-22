@@ -1,7 +1,7 @@
 import { useSyncExternalStore } from "react";
 
-import horizontalBlackUrl from "../../rebranding/svg-new/talos-logo-horizontal-black.svg";
-import markBlackUrl from "../../rebranding/svg-new/talos-mark-black.svg";
+import horizontalBlackUrl from "../../brand/talos-logo-horizontal-black.svg";
+import markBlackUrl from "../../brand/talos-mark-black.svg";
 import {
   getAppliedAppearance,
   subscribeToAppliedAppearance,
